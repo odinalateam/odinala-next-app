@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          String    @default("user")
+  banned        Boolean   @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions Session[]
+  accounts Account[]
+  profile  UserProfile?
+  orders   Order[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model UserProfile {
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  phone            String?
+  address          String?
+  dateOfBirth      DateTime?
+
+  // Documents
+  passportUrl      String?
+  utilityBillUrl   String?
+
+  // Financial
+  citizenship      String?
+  taxId            String?
+  employmentStatus String?
+  occupation       String?
+  employerName     String?
+  sourceOfFunds    String?
+
+  // KYC
+  kycStatus        String    @default("unverified") // "unverified" | "verified"
+  kycVerifiedAt    DateTime?
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  type      String   // "Property" | "Land"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listings Listing[]
+}
+
+model Listing {
+  id                  String   @id @default(cuid())
+  name                String
+  description         String
+  price               Float
+  location            String
+  address             String
+  type                String   // "Property" | "Land"
+  bedrooms            Int?
+  bathrooms           Int?
+  size                Float
+  features            String[]
+  images              String[]
+  documents           String[]
+  status              String   @default("Available") // "Available" | "Sold" | "Under Offer"
+  purchaseType        String   @default("one_off") // "recurring_plan" | "one_off"
+  developmentStatus   String   @default("completed") // "ongoing" | "completed" | "uncompleted"
+  planStatus          String? // "off_plan" | null
+  maxInstallment      Int? // e.g. 18 months
+  pricePerInstallment Float? // manually set by admin
+  categoryId          String?
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  orders   Order[]
+}
+
+model Order {
+  id                String   @id @default(cuid())
+  userId            String
+  listingId         String
+  status            String   @default("Pending") // "Pending" | "Approved" | "Rejected" | "Completed"
+  notes             String?
+  paymentOption     String   @default("outright") // "outright" | "installment"
+  installmentMonths Int?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
