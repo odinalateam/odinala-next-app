@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Moon, Search, Sun, LogOut, LayoutDashboard } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -7,14 +8,32 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useSession, signOut } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const { data: session, isPending } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const isAdmin = session?.user?.role === "admin";
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = searchQuery.trim();
+    if (!trimmed) return;
+
+    let targetPath = "/";
+    if (pathname.startsWith("/properties")) {
+      targetPath = "/properties";
+    } else if (pathname.startsWith("/lands")) {
+      targetPath = "/lands";
+    }
+
+    router.push(`${targetPath}?q=${encodeURIComponent(trimmed)}`);
+  };
 
   const handleSignOut = async () => {
     await signOut({
@@ -47,20 +66,55 @@ export default function Navbar() {
         </Link>
 
         {/* center */}
-        <div className="flex items-center gap-2 bg-muted rounded-md px-3 py-1.5 w-full max-w-sm">
+        <form
+          onSubmit={handleSearch}
+          className="flex items-center gap-2 bg-muted rounded-md px-3 py-1.5 w-full max-w-sm"
+        >
           <Search className="w-4 h-4 text-muted-foreground" />
           <input
             type="text"
             placeholder="Search properties, lands..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-transparent text-sm outline-none w-full placeholder:text-muted-foreground"
           />
-        </div>
+        </form>
 
         {/* right side - links */}
         <div className="flex items-center gap-4 text-sm">
-          <p>All</p>
-          <p>Properties</p>
-          <p>Lands</p>
+          <Link
+            href="/"
+            className={cn(
+              "transition-colors",
+              pathname === "/"
+                ? "text-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            All
+          </Link>
+          <Link
+            href="/properties"
+            className={cn(
+              "transition-colors",
+              pathname.startsWith("/properties")
+                ? "text-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Properties
+          </Link>
+          <Link
+            href="/lands"
+            className={cn(
+              "transition-colors",
+              pathname.startsWith("/lands")
+                ? "text-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Lands
+          </Link>
 
           <Separator orientation="vertical" />
 

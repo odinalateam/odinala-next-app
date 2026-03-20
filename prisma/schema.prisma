@@ -73,9 +73,10 @@ model UserProfile {
   address          String?
   dateOfBirth      DateTime?
 
-  // Documents
-  passportUrl      String?
-  utilityBillUrl   String?
+  // Identity Verification
+  nin              String?
+  ninVerified      Boolean   @default(false)
+  tinVerified      Boolean   @default(false)
 
   // Financial
   citizenship      String?
@@ -142,6 +143,7 @@ model Order {
   notes             String?
   paymentOption     String   @default("outright") // "outright" | "installment"
   installmentMonths Int?
+  proofOfPaymentUrl String?
 
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt

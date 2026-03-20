@@ -1,3 +1,12 @@
+export interface ListingSearchParams {
+  q?: string;
+  developmentStatus?: string;
+  purchaseType?: string;
+  features?: string;
+  minPrice?: string;
+  maxPrice?: string;
+}
+
 export type PropertyType = "Property" | "Land";
 export type PurchaseType = "recurring_plan" | "one_off";
 export type DevelopmentStatus = "ongoing" | "completed" | "uncompleted";
@@ -42,6 +51,11 @@ export type UserWithProfile = User & {
 
 export type OrderWithRelations = Order & {
   user: User;
+  listing: Listing;
+};
+
+export type OrderWithFullRelations = Order & {
+  user: UserWithProfile;
   listing: Listing;
 };
 

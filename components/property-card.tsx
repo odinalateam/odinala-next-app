@@ -3,6 +3,7 @@ import Image from "next/image";
 import { MapPin } from "lucide-react";
 import type { ListingWithCategory } from "@/lib/types";
 import { formatPrice } from "@/lib/format";
+import { CompareToggleButton } from "@/components/compare/compare-toggle-button";
 
 const gradients = [
   "from-emerald-400 to-cyan-500",
@@ -31,6 +32,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
     <Link href={`/properties/${property.id}`} className="group">
       {hasImage ? (
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
+          <CompareToggleButton property={property} />
           <Image
             src={property.images[0]}
             alt={property.name}
@@ -45,6 +47,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         <div
           className={`relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-gradient-to-br ${gradients[gradientIndex]} flex items-end p-4`}
         >
+          <CompareToggleButton property={property} />
           <span className="text-white/80 text-xs font-medium bg-black/20 rounded-full px-2.5 py-1">
             {property.type}
           </span>

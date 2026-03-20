@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { getPublicListingById } from "@/lib/actions/public-listings";
 import { PropertyDetailClient } from "@/components/property-detail-client";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { prisma } from "@/lib/prisma";
 
 export async function generateMetadata({
   params,
@@ -25,5 +28,21 @@ export default async function PropertyPage({
   const listing = await getPublicListingById(id);
   if (!listing) notFound();
 
-  return <PropertyDetailClient listing={listing} />;
+  let kycVerified = false;
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    if (session) {
+      const profile = await prisma.userProfile.findUnique({
+        where: { userId: session.user.id },
+        select: { kycStatus: true },
+      });
+      kycVerified = profile?.kycStatus === "verified";
+    }
+  } catch {
+    // Not logged in
+  }
+
+  return <PropertyDetailClient listing={listing} kycVerified={kycVerified} />;
 }

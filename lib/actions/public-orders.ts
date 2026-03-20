@@ -23,6 +23,16 @@ export async function createOrder(data: {
 }) {
   const session = await requireAuth();
 
+  // KYC guard
+  const profile = await prisma.userProfile.findUnique({
+    where: { userId: session.user.id },
+  });
+  if (!profile || profile.kycStatus !== "verified") {
+    throw new Error(
+      "Please complete your KYC verification before placing an order"
+    );
+  }
+
   const listing = await prisma.listing.findUnique({
     where: { id: data.listingId },
   });
@@ -77,4 +87,25 @@ export async function getUserOrders() {
     include: { listing: { include: { category: true } } },
     orderBy: { createdAt: "desc" },
   });
+}
+
+export async function uploadProofOfPayment(orderId: string, url: string) {
+  const session = await requireAuth();
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+  });
+  if (!order) throw new Error("Order not found");
+  if (order.userId !== session.user.id) throw new Error("Unauthorized");
+  if (order.status === "Rejected") {
+    throw new Error("Cannot upload proof for a rejected order");
+  }
+
+  await prisma.order.update({
+    where: { id: orderId },
+    data: { proofOfPaymentUrl: url },
+  });
+
+  revalidatePath("/my-account/orders");
+  revalidatePath("/dashboard/orders");
 }
