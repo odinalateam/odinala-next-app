@@ -104,17 +104,25 @@ export function UserDetailPanel({
           />
         </div>
 
-        {/* Documents */}
+        {/* Identity Verification */}
         <div>
-          <h3 className="text-sm font-medium mb-2">Documents</h3>
+          <h3 className="text-sm font-medium mb-2">Identity Verification</h3>
           <Separator className="mb-3" />
           <InfoRow
-            label="Passport / ID"
-            value={user.profile?.passportUrl ? "Uploaded" : "Not uploaded"}
+            label="NIN"
+            value={
+              user.profile?.nin
+                ? `***${user.profile.nin.slice(-4)}`
+                : "Not provided"
+            }
           />
           <InfoRow
-            label="Utility Bill"
-            value={user.profile?.utilityBillUrl ? "Uploaded" : "Not uploaded"}
+            label="NIN Verified"
+            value={user.profile?.ninVerified ? "Yes" : "No"}
+          />
+          <InfoRow
+            label="TIN Verified"
+            value={user.profile?.tinVerified ? "Yes" : "No"}
           />
         </div>
 

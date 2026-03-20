@@ -41,7 +41,7 @@ export function AuthCarousel() {
   }, []);
 
   return (
-    <div className="relative hidden lg:block lg:w-1/2 h-screen overflow-hidden">
+    <div className="relative w-full lg:w-1/2 h-64 lg:h-screen overflow-hidden">
       {slides.map((slide, index) => (
         <div
           key={index}

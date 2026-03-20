@@ -5,6 +5,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { CompareProvider } from "@/lib/compare-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,9 @@ export default function RootLayout({
       <body className="antialiased">
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <CompareProvider>
+            {children}
+          </CompareProvider>
         </ThemeProvider>
       </body>
     </html>

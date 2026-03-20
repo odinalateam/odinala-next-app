@@ -69,7 +69,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/"
+                  href="/properties"
                   className="hover:text-background transition-colors"
                 >
                   Properties
@@ -77,7 +77,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/"
+                  href="/lands"
                   className="hover:text-background transition-colors"
                 >
                   Lands

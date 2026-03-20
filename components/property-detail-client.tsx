@@ -12,6 +12,7 @@ import {
   MapPin,
   FileText,
   CheckCircle,
+  Scale,
 } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 import { createOrder } from "@/lib/actions/public-orders";
@@ -19,6 +20,7 @@ import { formatPrice } from "@/lib/format";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import type { ListingWithCategory } from "@/lib/types";
+import { useCompare } from "@/lib/compare-context";
 
 const gradients = [
   "from-emerald-400 to-cyan-500",
@@ -73,11 +75,14 @@ function getDevStatusColor(status: string) {
 
 interface Props {
   listing: ListingWithCategory;
+  kycVerified?: boolean;
 }
 
-export function PropertyDetailClient({ listing }: Props) {
+export function PropertyDetailClient({ listing, kycVerified = false }: Props) {
   const { data: session } = useSession();
   const router = useRouter();
+  const { toggleItem, isInCompare, isFull } = useCompare();
+  const inCompare = isInCompare(listing.id);
   const [paymentOption, setPaymentOption] = useState<"outright" | "installment">(
     "outright"
   );
@@ -164,7 +169,7 @@ export function PropertyDetailClient({ listing }: Props) {
       )}
 
       {/* Badges */}
-      <div className="flex items-center gap-2 mt-6">
+      <div className="flex items-center gap-2 mt-6 flex-wrap">
         <span
           className={`text-xs font-semibold uppercase rounded-full px-3 py-1 ${getDevStatusColor(listing.developmentStatus)}`}
         >
@@ -174,6 +179,18 @@ export function PropertyDetailClient({ listing }: Props) {
           <span className="text-xs font-semibold uppercase rounded-full px-3 py-1 bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">
             OFF-PLAN
           </span>
+        )}
+        {listing.type === "Property" && (
+          <Button
+            variant={inCompare ? "default" : "outline"}
+            size="sm"
+            onClick={() => toggleItem(listing)}
+            disabled={!inCompare && isFull}
+            className="ml-auto"
+          >
+            <Scale className="w-4 h-4" />
+            {inCompare ? "Remove from Compare" : isFull ? "Compare Full" : "Add to Compare"}
+          </Button>
         )}
       </div>
 
@@ -391,17 +408,34 @@ export function PropertyDetailClient({ listing }: Props) {
                     </p>
                   )}
 
+                  {session && !kycVerified && (
+                    <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-900/30 dark:bg-amber-900/10">
+                      <p className="text-sm text-amber-700 dark:text-amber-400">
+                        Complete your{" "}
+                        <Link
+                          href="/my-account"
+                          className="underline font-medium"
+                        >
+                          KYC verification
+                        </Link>{" "}
+                        to place orders.
+                      </p>
+                    </div>
+                  )}
+
                   <Button
                     className="w-full mt-6"
                     size="lg"
                     onClick={handleSendRequest}
-                    disabled={submitting}
+                    disabled={submitting || (!!session && !kycVerified)}
                   >
                     {submitting
                       ? "Sending..."
-                      : session
-                        ? "Send request"
-                        : "Sign in to continue"}
+                      : !session
+                        ? "Sign in to continue"
+                        : !kycVerified
+                          ? "Complete KYC to continue"
+                          : "Send request"}
                   </Button>
                 </>
               )}
