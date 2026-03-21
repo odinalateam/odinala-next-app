@@ -318,7 +318,27 @@ export function PropertyDetailClient({ listing, kycVerified = false }: Props) {
         </div>
 
         {/* Payment Sidebar */}
-        {listing.status === "Available" && (
+        {!listing.isVisible ? (
+          <div className="lg:w-80 shrink-0">
+            <div className="border border-border rounded-lg p-6 sticky top-20 text-center">
+              <div className="flex flex-col items-center gap-3 py-4">
+                <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                  <span className="text-amber-600 dark:text-amber-400 text-lg">!</span>
+                </div>
+                <p className="font-medium">This listing is currently unavailable</p>
+                <p className="text-sm text-muted-foreground">
+                  For inquiries, please contact us at{" "}
+                  <a
+                    href="mailto:odinalainvest@gmail.com"
+                    className="text-primary underline font-medium"
+                  >
+                    odinalainvest@gmail.com
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : listing.status === "Available" && (
           <div className="lg:w-80 shrink-0">
             <div className="border border-border rounded-lg p-6 sticky top-20">
               <h3 className="text-lg font-semibold text-center mb-4">

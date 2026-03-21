@@ -6,6 +6,7 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CompareProvider } from "@/lib/compare-context";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
           <CompareProvider>
             {children}
           </CompareProvider>
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>

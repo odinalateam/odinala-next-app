@@ -8,8 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/format";
-import { deleteListing } from "@/lib/actions/listings";
+import { deleteListing, toggleListingVisibility } from "@/lib/actions/listings";
+import { Switch } from "@/components/ui/switch";
 import { ListingForm } from "./listing-form";
+import { toast } from "sonner";
 
 function getStatusColor(status: string) {
   switch (status) {
@@ -33,6 +35,20 @@ export function ListingsClient({
 }) {
   const [activeTab, setActiveTab] = useState<"Property" | "Land">("Property");
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [toggling, setToggling] = useState<string | null>(null);
+
+  const handleToggleVisibility = async (id: string, currentValue: boolean) => {
+    const newValue = !currentValue;
+    setToggling(id);
+    toast.promise(toggleListingVisibility(id, newValue), {
+      loading: newValue ? "Making listing visible..." : "Hiding listing...",
+      success: newValue
+        ? "Listing is now visible to the public"
+        : "Listing is now hidden from the public",
+      error: "Failed to update listing visibility",
+      finally: () => setToggling(null),
+    });
+  };
 
   const filtered = data.filter((l) => l.type === activeTab);
 
@@ -51,7 +67,9 @@ export function ListingsClient({
       accessorKey: "name",
       header: "Name",
       cell: ({ row }) => (
-        <span className="font-medium">{row.original.name}</span>
+        <span className={cn("font-medium", !row.original.isVisible && "opacity-50")}>
+          {row.original.name}
+        </span>
       ),
     },
     {
@@ -70,6 +88,24 @@ export function ListingsClient({
         <Badge variant="outline" className={getStatusColor(row.original.status)}>
           {row.original.status}
         </Badge>
+      ),
+    },
+    {
+      accessorKey: "isVisible",
+      header: "Visible",
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+          <Switch
+            checked={row.original.isVisible}
+            onCheckedChange={() =>
+              handleToggleVisibility(row.original.id, row.original.isVisible)
+            }
+            disabled={toggling === row.original.id}
+          />
+          <span className="text-xs text-muted-foreground">
+            {row.original.isVisible ? "Public" : "Hidden"}
+          </span>
+        </div>
       ),
     },
     {

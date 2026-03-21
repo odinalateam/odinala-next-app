@@ -14,6 +14,7 @@ export async function getPublicListings(filters?: {
 }) {
   return prisma.listing.findMany({
     where: {
+      isVisible: true,
       ...(filters?.type && { type: filters.type }),
       ...(filters?.status ? { status: filters.status } : { status: "Available" }),
       ...(filters?.developmentStatus && {
@@ -45,7 +46,7 @@ export async function getPublicListings(filters?: {
 
 export async function getAvailableFeatures(): Promise<string[]> {
   const listings = await prisma.listing.findMany({
-    where: { status: "Available", type: "Property" },
+    where: { status: "Available", type: "Property", isVisible: true },
     select: { features: true },
   });
   const featureSet = new Set<string>();

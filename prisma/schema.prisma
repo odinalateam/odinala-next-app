@@ -121,6 +121,7 @@ model Listing {
   images              String[]
   documents           String[]
   status              String   @default("Available") // "Available" | "Sold" | "Under Offer"
+  isVisible           Boolean  @default(true)
   purchaseType        String   @default("one_off") // "recurring_plan" | "one_off"
   developmentStatus   String   @default("completed") // "ongoing" | "completed" | "uncompleted"
   planStatus          String? // "off_plan" | null
