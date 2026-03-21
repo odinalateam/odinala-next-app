@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 
 interface PropertyFiltersProps {
   availableFeatures: string[];
@@ -39,8 +40,30 @@ export function PropertyFilters({ availableFeatures }: PropertyFiltersProps) {
   const currentPurchaseType = searchParams.get("purchaseType") || "";
   const currentFeatures =
     searchParams.get("features")?.split(",").filter(Boolean) || [];
-  const currentMinPrice = searchParams.get("minPrice") || "";
-  const currentMaxPrice = searchParams.get("maxPrice") || "";
+
+  // Local state for price inputs with debouncing
+  const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
+  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
+  const debouncedMinPrice = useDebounce(minPrice, 500);
+  const debouncedMaxPrice = useDebounce(maxPrice, 500);
+
+  // Update URL when debounced price values change
+  useEffect(() => {
+    updateFilters({
+      minPrice: debouncedMinPrice || null,
+      maxPrice: debouncedMaxPrice || null,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedMinPrice, debouncedMaxPrice]);
+
+  // Sync local state with URL params when they change externally
+  useEffect(() => {
+    const urlMin = searchParams.get("minPrice") || "";
+    const urlMax = searchParams.get("maxPrice") || "";
+    if (urlMin !== minPrice) setMinPrice(urlMin);
+    if (urlMax !== maxPrice) setMaxPrice(urlMax);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const toggleFeature = (feature: string) => {
     const updated = currentFeatures.includes(feature)
@@ -52,6 +75,8 @@ export function PropertyFilters({ availableFeatures }: PropertyFiltersProps) {
   };
 
   const clearAll = () => {
+    setMinPrice("");
+    setMaxPrice("");
     router.push(pathname);
   };
 
@@ -59,8 +84,8 @@ export function PropertyFilters({ availableFeatures }: PropertyFiltersProps) {
     currentDevStatus ||
     currentPurchaseType ||
     currentFeatures.length > 0 ||
-    currentMinPrice ||
-    currentMaxPrice ||
+    minPrice ||
+    maxPrice ||
     searchParams.get("q")
   );
 
@@ -89,19 +114,15 @@ export function PropertyFilters({ availableFeatures }: PropertyFiltersProps) {
           <Input
             type="number"
             placeholder="Min"
-            value={currentMinPrice}
-            onChange={(e) =>
-              updateFilters({ minPrice: e.target.value || null })
-            }
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
             className="text-xs"
           />
           <Input
             type="number"
             placeholder="Max"
-            value={currentMaxPrice}
-            onChange={(e) =>
-              updateFilters({ maxPrice: e.target.value || null })
-            }
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
             className="text-xs"
           />
         </div>

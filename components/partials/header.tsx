@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Moon, Search, Sun, LogOut, LayoutDashboard } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { useTheme } from "next-themes";
 import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
@@ -17,13 +18,13 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   const isAdmin = session?.user?.role === "admin";
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = searchQuery.trim();
-    if (!trimmed) return;
+  // Search as you type
+  useEffect(() => {
+    const trimmed = debouncedSearchQuery.trim();
 
     let targetPath = "/";
     if (pathname.startsWith("/properties")) {
@@ -32,8 +33,15 @@ export default function Navbar() {
       targetPath = "/lands";
     }
 
-    router.push(`${targetPath}?q=${encodeURIComponent(trimmed)}`);
-  };
+    if (trimmed) {
+      router.push(`${targetPath}?q=${encodeURIComponent(trimmed)}`, {
+        scroll: false,
+      });
+    } else {
+      // Clear search if empty
+      router.push(targetPath, { scroll: false });
+    }
+  }, [debouncedSearchQuery, pathname, router]);
 
   const handleSignOut = async () => {
     await signOut({
@@ -66,19 +74,16 @@ export default function Navbar() {
         </Link>
 
         {/* center */}
-        <form
-          onSubmit={handleSearch}
-          className="flex items-center gap-2 bg-muted rounded-md px-3 py-1.5 w-full max-w-sm"
-        >
+        <div className="flex items-center gap-2 bg-muted rounded-md px-3 py-1.5 w-full max-w-sm">
           <Search className="w-4 h-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search properties, lands..."
+            placeholder="Search properties, lands, locations..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-transparent text-sm outline-none w-full placeholder:text-muted-foreground"
           />
-        </form>
+        </div>
 
         {/* right side - links */}
         <div className="flex items-center gap-4 text-sm">
