@@ -28,6 +28,7 @@ export interface Property {
   images: string[];
   documents: string[];
   status: "Available" | "Sold" | "Under Offer";
+  isVisible: boolean;
   purchaseType: PurchaseType;
   developmentStatus: DevelopmentStatus;
   planStatus?: string | null;

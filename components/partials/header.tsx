@@ -22,8 +22,15 @@ export default function Navbar() {
 
   const isAdmin = session?.user?.role === "admin";
 
-  // Search as you type
+  // Search as you type — only on searchable listing pages
+  const isSearchablePage =
+    pathname === "/" ||
+    pathname === "/properties" ||
+    pathname === "/lands";
+
   useEffect(() => {
+    if (!isSearchablePage) return;
+
     const trimmed = debouncedSearchQuery.trim();
 
     let targetPath = "/";
@@ -41,7 +48,7 @@ export default function Navbar() {
       // Clear search if empty
       router.push(targetPath, { scroll: false });
     }
-  }, [debouncedSearchQuery, pathname, router]);
+  }, [debouncedSearchQuery, pathname, router, isSearchablePage]);
 
   const handleSignOut = async () => {
     await signOut({

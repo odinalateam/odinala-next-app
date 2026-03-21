@@ -86,3 +86,15 @@ export async function deleteListing(id: string) {
   revalidatePath("/dashboard/listings");
   revalidatePath("/");
 }
+
+export async function toggleListingVisibility(id: string, isVisible: boolean) {
+  await requireAdmin();
+  await prisma.listing.update({
+    where: { id },
+    data: { isVisible },
+  });
+  revalidatePath("/dashboard/listings");
+  revalidatePath("/");
+  revalidatePath("/properties");
+  revalidatePath("/lands");
+}
