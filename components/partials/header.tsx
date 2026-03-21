@@ -116,7 +116,7 @@ export default function Navbar() {
             Lands
           </Link>
 
-          <Separator orientation="vertical" />
+          {/* <Separator orientation="vertical" /> */}
 
           {/* Auth state */}
           {isPending ? (
@@ -157,14 +157,6 @@ export default function Navbar() {
             </div>
           ) : (
             <>
-              {/* theme toggle */}
-              <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="cursor-pointer"
-              >
-                <Sun className="w-4 h-4 hidden dark:block" />
-                <Moon className="w-4 h-4 block dark:hidden" />
-              </button>
               <Link href="/auth/sign-in">
                 <Button variant="default" size="sm">
                   Sign In
@@ -172,6 +164,17 @@ export default function Navbar() {
               </Link>
             </>
           )}
+
+          <Separator orientation="vertical" />
+
+          {/* theme toggle */}
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="cursor-pointer"
+          >
+            <Sun className="w-4 h-4 hidden dark:block" />
+            <Moon className="w-4 h-4 block dark:hidden" />
+          </button>
         </div>
       </div>
     </div>
