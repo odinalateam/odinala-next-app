@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/dialog";
 import { createListing, updateListing } from "@/lib/actions/listings";
 import type { ListingWithCategory, Category } from "@/lib/types";
-import { Plus } from "lucide-react";
+import { Plus, FileText, X } from "lucide-react";
+import { UploadDropzone } from "@/lib/uploadthing";
 import { ImageUpload } from "./image-upload";
 import { DocumentUpload } from "./document-upload";
 
@@ -38,6 +39,9 @@ export function ListingForm({
   const [images, setImages] = useState<string[]>(listing?.images ?? []);
   const [documents, setDocuments] = useState<string[]>(
     listing?.documents ?? []
+  );
+  const [applicationForm, setApplicationForm] = useState<string | null>(
+    listing?.applicationFormUrl ?? null
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -79,6 +83,7 @@ export function ListingForm({
           ? parseFloat(formData.get("pricePerInstallment") as string)
           : null,
       categoryId: (formData.get("categoryId") as string) || null,
+      applicationFormUrl: applicationForm,
     };
 
     try {
@@ -296,6 +301,53 @@ export function ListingForm({
             <div className="col-span-2 space-y-1.5">
               <Label>Documents (PDF)</Label>
               <DocumentUpload value={documents} onChange={setDocuments} />
+            </div>
+            <div className="col-span-2 space-y-1.5">
+              <Label>Application Form (optional)</Label>
+              {applicationForm ? (
+                <div className="flex items-center gap-2 rounded-lg border border-input p-2">
+                  <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <a
+                    href={applicationForm}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-primary hover:underline truncate"
+                  >
+                    Application Form
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setApplicationForm(null)}
+                    className="ml-auto shrink-0 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ) : (
+                <UploadDropzone
+                  endpoint="applicationForm"
+                  onClientUploadComplete={(res) => {
+                    if (res?.[0]?.serverData?.url) {
+                      setApplicationForm(res[0].serverData.url);
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    alert(`Upload failed: ${error.message}`);
+                  }}
+                  appearance={{
+                    container: "border-border py-4",
+                    uploadIcon: "text-muted-foreground",
+                    label: "text-sm text-foreground",
+                    allowedContent: "text-xs text-muted-foreground",
+                    button:
+                      "bg-primary text-primary-foreground text-xs px-3 py-1.5 h-8 ut-ready:bg-primary ut-uploading:bg-primary/50",
+                  }}
+                  content={{
+                    label: "Upload application form",
+                    allowedContent: "PDF up to 8MB",
+                  }}
+                />
+              )}
             </div>
           </div>
           <DialogFooter>

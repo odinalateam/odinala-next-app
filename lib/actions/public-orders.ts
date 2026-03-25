@@ -89,6 +89,33 @@ export async function getUserOrders() {
   });
 }
 
+export async function uploadFilledApplicationForm(
+  orderId: string,
+  url: string
+) {
+  const session = await requireAuth();
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+  });
+  if (!order) throw new Error("Order not found");
+  if (order.userId !== session.user.id) throw new Error("Unauthorized");
+  if (!order.applicationFormReleased) {
+    throw new Error("Application form has not been released yet");
+  }
+  if (order.status === "Rejected") {
+    throw new Error("Cannot upload form for a rejected order");
+  }
+
+  await prisma.order.update({
+    where: { id: orderId },
+    data: { filledApplicationFormUrl: url },
+  });
+
+  revalidatePath("/my-account/orders");
+  revalidatePath("/dashboard/orders");
+}
+
 export async function uploadProofOfPayment(orderId: string, url: string) {
   const session = await requireAuth();
 

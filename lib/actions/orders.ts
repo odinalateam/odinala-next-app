@@ -32,3 +32,24 @@ export async function updateOrderStatus(id: string, status: string) {
   revalidatePath("/dashboard/orders");
   revalidatePath("/my-account/orders");
 }
+
+export async function releaseApplicationForm(orderId: string) {
+  await requireAdmin();
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: { listing: true },
+  });
+  if (!order) throw new Error("Order not found");
+  if (!order.listing.applicationFormUrl) {
+    throw new Error("No application form uploaded for this listing");
+  }
+
+  await prisma.order.update({
+    where: { id: orderId },
+    data: { applicationFormReleased: true },
+  });
+
+  revalidatePath("/dashboard/orders");
+  revalidatePath("/my-account/orders");
+}
