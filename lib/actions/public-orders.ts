@@ -4,6 +4,12 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { sendEmail, sendAdminEmail, APP_URL } from "@/lib/email";
+import { formatPrice } from "@/lib/format";
+import { OrderConfirmationEmail } from "@/emails/order-confirmation";
+import { AdminNewOrderEmail } from "@/emails/admin-new-order";
+import { AdminApplicationSubmittedEmail } from "@/emails/admin-application-submitted";
+import { AdminProofOfPaymentEmail } from "@/emails/admin-proof-of-payment";
 
 async function requireAuth() {
   const session = await auth.api.getSession({
@@ -63,7 +69,7 @@ export async function createOrder(data: {
     throw new Error("You already have a pending request for this listing");
   }
 
-  await prisma.order.create({
+  const order = await prisma.order.create({
     data: {
       userId: session.user.id,
       listingId: data.listingId,
@@ -77,6 +83,36 @@ export async function createOrder(data: {
   revalidatePath(`/properties/${data.listingId}`);
   revalidatePath("/my-account/orders");
   revalidatePath("/dashboard/orders");
+
+  sendEmail({
+    to: session.user.email,
+    subject: "Order Confirmation - Odinala",
+    react: OrderConfirmationEmail({
+      userName: session.user.name,
+      listingName: listing.name,
+      listingLocation: listing.location,
+      price: formatPrice(listing.price),
+      paymentOption: data.paymentOption,
+      installmentMonths: data.installmentMonths ?? null,
+      orderId: order.id,
+      appUrl: APP_URL,
+    }),
+  });
+
+  sendAdminEmail({
+    subject: `New Order: ${listing.name} - Odinala`,
+    react: AdminNewOrderEmail({
+      userName: session.user.name,
+      userEmail: session.user.email,
+      listingName: listing.name,
+      listingLocation: listing.location,
+      price: formatPrice(listing.price),
+      paymentOption: data.paymentOption,
+      installmentMonths: data.installmentMonths ?? null,
+      orderId: order.id,
+      appUrl: APP_URL,
+    }),
+  });
 }
 
 export async function getUserOrders() {
@@ -107,13 +143,25 @@ export async function uploadFilledApplicationForm(
     throw new Error("Cannot upload form for a rejected order");
   }
 
-  await prisma.order.update({
+  const updatedOrder = await prisma.order.update({
     where: { id: orderId },
     data: { filledApplicationFormUrl: url },
+    include: { listing: true },
   });
 
   revalidatePath("/my-account/orders");
   revalidatePath("/dashboard/orders");
+
+  sendAdminEmail({
+    subject: `Application Form Submitted: ${updatedOrder.listing.name} - Odinala`,
+    react: AdminApplicationSubmittedEmail({
+      userName: session.user.name,
+      userEmail: session.user.email,
+      listingName: updatedOrder.listing.name,
+      orderId,
+      appUrl: APP_URL,
+    }),
+  });
 }
 
 export async function uploadProofOfPayment(orderId: string, url: string) {
@@ -128,11 +176,23 @@ export async function uploadProofOfPayment(orderId: string, url: string) {
     throw new Error("Cannot upload proof for a rejected order");
   }
 
-  await prisma.order.update({
+  const updatedOrder = await prisma.order.update({
     where: { id: orderId },
     data: { proofOfPaymentUrl: url },
+    include: { listing: true },
   });
 
   revalidatePath("/my-account/orders");
   revalidatePath("/dashboard/orders");
+
+  sendAdminEmail({
+    subject: `Proof of Payment Uploaded: ${updatedOrder.listing.name} - Odinala`,
+    react: AdminProofOfPaymentEmail({
+      userName: session.user.name,
+      userEmail: session.user.email,
+      listingName: updatedOrder.listing.name,
+      orderId,
+      appUrl: APP_URL,
+    }),
+  });
 }

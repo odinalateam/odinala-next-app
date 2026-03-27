@@ -5,6 +5,8 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { verifyNIN, verifyTIN } from "@/lib/verifyme";
+import { sendEmail, APP_URL } from "@/lib/email";
+import { KycVerifiedEmail } from "@/emails/kyc-verified";
 
 async function requireAuth() {
   const session = await auth.api.getSession({
@@ -36,6 +38,18 @@ async function checkAndUpdateKycStatus(userId: string) {
       where: { userId },
       data: { kycStatus: "verified", kycVerifiedAt: new Date() },
     });
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (user) {
+      sendEmail({
+        to: user.email,
+        subject: "Your KYC Verification is Complete - Odinala",
+        react: KycVerifiedEmail({
+          userName: user.name,
+          appUrl: APP_URL,
+        }),
+      });
+    }
   } else if (!shouldBeVerified && profile.kycStatus === "verified") {
     await prisma.userProfile.update({
       where: { userId },
