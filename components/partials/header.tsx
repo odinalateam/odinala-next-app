@@ -28,6 +28,7 @@ export default function Navbar() {
     pathname === "/properties" ||
     pathname === "/lands";
 
+  // Live search-as-you-type on searchable listing pages only
   useEffect(() => {
     if (!isSearchablePage) return;
 
@@ -49,6 +50,16 @@ export default function Navbar() {
       router.push(targetPath, { scroll: false });
     }
   }, [debouncedSearchQuery, pathname, router, isSearchablePage]);
+
+  // On non-searchable pages, redirect to home listings on Enter
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !isSearchablePage) {
+      const trimmed = searchQuery.trim();
+      if (trimmed) {
+        router.push(`/?q=${encodeURIComponent(trimmed)}`);
+      }
+    }
+  };
 
   const handleSignOut = async () => {
     await signOut({
@@ -88,6 +99,7 @@ export default function Navbar() {
             placeholder="Search properties, lands, locations..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
             className="bg-transparent text-sm outline-none w-full placeholder:text-muted-foreground"
           />
         </div>

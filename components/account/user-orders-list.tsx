@@ -45,18 +45,12 @@ function ProofOfPaymentSection({ order }: { order: OrderWithListing }) {
   const [uploaded, setUploaded] = useState(!!order.proofOfPaymentUrl);
   const [uploading, setUploading] = useState(false);
 
-  if (order.status === "Rejected") return null;
+  // Only show for approved or completed orders with application released
+  if (order.status !== "Approved" && order.status !== "Completed") return null;
+  if (!order.applicationFormReleased) return null;
 
-  // Hide until application form step is done (if applicable)
-  if (
-    order.listing.applicationFormUrl &&
-    order.applicationFormReleased &&
-    !order.filledApplicationFormUrl
-  )
-    return null;
-
-  // Hide if form exists but hasn't been released yet
-  if (order.listing.applicationFormUrl && !order.applicationFormReleased)
+  // If there's an application form, wait until it's been filled out
+  if (order.listing.applicationFormUrl && !order.filledApplicationFormUrl)
     return null;
 
   if (uploaded || order.proofOfPaymentUrl) {
