@@ -1,6 +1,6 @@
 "use client";
 
-const CALENDLY_URL = "https://calendly.com/PLACEHOLDER";
+const CALENDLY_URL = "https://calendly.com/odinalainvest";
 
 export function CalendlyEmbed() {
   return (
