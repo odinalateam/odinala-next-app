@@ -11,6 +11,7 @@ import {
   Package,
   MessageSquare,
   Tag,
+  Newspaper,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ const sidebarItems = [
   { label: "Orders", href: "/dashboard/orders", icon: Package },
   { label: "Messages", href: "/dashboard/messages", icon: MessageSquare },
   { label: "Categories", href: "/dashboard/categories", icon: Tag },
+  { label: "News & Insights", href: "/dashboard/news", icon: Newspaper },
 ];
 
 export default function DashboardSidebar() {

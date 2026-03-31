@@ -2,16 +2,20 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback, useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 
 interface PropertyFiltersProps {
   availableFeatures: string[];
+  priceRange: { min: number; max: number };
 }
 
-export function PropertyFilters({ availableFeatures }: PropertyFiltersProps) {
+function formatPrice(value: number) {
+  return `N${value.toLocaleString()}`;
+}
+
+export function PropertyFilters({ availableFeatures, priceRange }: PropertyFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -110,21 +114,41 @@ export function PropertyFilters({ availableFeatures }: PropertyFiltersProps) {
         <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
           Price Range
         </Label>
-        <div className="flex gap-2">
-          <Input
-            type="number"
-            placeholder="Min"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className="text-xs"
-          />
-          <Input
-            type="number"
-            placeholder="Max"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="text-xs"
-          />
+        <div className="space-y-3">
+          <div>
+            <p className="text-xs text-muted-foreground mb-1">
+              Min Price: <span className="font-medium text-foreground">{formatPrice(minPrice ? Number(minPrice) : priceRange.min)}</span>
+            </p>
+            <input
+              type="range"
+              min={priceRange.min}
+              max={priceRange.max}
+              step={100000}
+              value={minPrice || priceRange.min}
+              onChange={(e) => {
+                const val = e.target.value;
+                setMinPrice(Number(val) <= priceRange.min ? "" : val);
+              }}
+              className="w-full accent-primary h-1.5 cursor-pointer"
+            />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground mb-1">
+              Max Price: <span className="font-medium text-foreground">{formatPrice(maxPrice ? Number(maxPrice) : priceRange.max)}</span>
+            </p>
+            <input
+              type="range"
+              min={priceRange.min}
+              max={priceRange.max}
+              step={100000}
+              value={maxPrice || priceRange.max}
+              onChange={(e) => {
+                const val = e.target.value;
+                setMaxPrice(Number(val) >= priceRange.max ? "" : val);
+              }}
+              className="w-full accent-primary h-1.5 cursor-pointer"
+            />
+          </div>
         </div>
       </div>
 

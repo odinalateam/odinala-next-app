@@ -1,6 +1,7 @@
 import {
   getPublicListings,
   getAvailableFeatures,
+  getPriceRange,
 } from "@/lib/actions/public-listings";
 import { PropertyGrid } from "@/components/property-grid";
 import { PropertyFilters } from "@/components/properties/property-filters";
@@ -45,9 +46,10 @@ export default async function PropertiesPage({
         : undefined,
   };
 
-  const [listings, availableFeatures] = await Promise.all([
+  const [listings, availableFeatures, priceRange] = await Promise.all([
     getPublicListings(filters),
     getAvailableFeatures(),
+    getPriceRange("Property"),
   ]);
 
   return (
@@ -61,7 +63,7 @@ export default async function PropertiesPage({
 
       <div className="flex flex-col lg:flex-row gap-8">
         <aside className="lg:w-64 shrink-0">
-          <PropertyFilters availableFeatures={availableFeatures} />
+          <PropertyFilters availableFeatures={availableFeatures} priceRange={priceRange} />
         </aside>
 
         <div className="flex-1 min-w-0">

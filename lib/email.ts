@@ -12,7 +12,7 @@ function getResend() {
   return resend;
 }
 
-const FROM_EMAIL = "Odinala <onboarding@resend.dev>";
+const FROM_EMAIL = "Odinala <noreply@odinala.io>";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 

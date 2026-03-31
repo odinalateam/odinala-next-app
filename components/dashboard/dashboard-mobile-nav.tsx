@@ -11,6 +11,7 @@ const navOptions = [
   { label: "Orders", value: "/dashboard/orders" },
   { label: "Messages", value: "/dashboard/messages" },
   { label: "Categories", value: "/dashboard/categories" },
+  { label: "News & Insights", value: "/dashboard/news" },
   { label: "Logout", value: "logout" },
 ];
 

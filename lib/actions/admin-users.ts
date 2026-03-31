@@ -56,17 +56,24 @@ export async function promoteToAdmin(userId: string) {
   revalidatePath("/dashboard/users");
 }
 
-export async function demoteFromAdmin(userId: string) {
-  const session = await requireAdmin();
-  if (session.user.id === userId) {
-    throw new Error("Cannot demote yourself");
+export async function demoteFromAdmin(
+  userId: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await requireAdmin();
+    if (session.user.id === userId) {
+      return { success: false, error: "Cannot demote yourself" };
+    }
+    await prisma.user.update({
+      where: { id: userId },
+      data: { role: "user" },
+    });
+    revalidatePath("/dashboard/admins");
+    revalidatePath("/dashboard/users");
+    return { success: true };
+  } catch {
+    return { success: false, error: "Failed to remove admin. Please try again." };
   }
-  await prisma.user.update({
-    where: { id: userId },
-    data: { role: "user" },
-  });
-  revalidatePath("/dashboard/admins");
-  revalidatePath("/dashboard/users");
 }
 
 export async function banUser(userId: string, reason: string) {

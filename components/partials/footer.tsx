@@ -52,6 +52,14 @@ export default function Footer() {
                   Careers
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/news"
+                  className="hover:text-background transition-colors"
+                >
+                  News & Insights
+                </Link>
+              </li>
             </ul>
           </div>
 

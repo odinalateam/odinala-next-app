@@ -121,9 +121,13 @@ export function ListingForm({
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <p className="text-xs text-muted-foreground">
+            <span className="text-destructive">*</span> indicates a required
+            field
+          </p>
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2 space-y-1.5">
-              <Label>Name</Label>
+              <Label>Name <span className="text-destructive">*</span></Label>
               <Input
                 name="name"
                 required
@@ -131,7 +135,7 @@ export function ListingForm({
               />
             </div>
             <div className="col-span-2 space-y-1.5">
-              <Label>Description</Label>
+              <Label>Description <span className="text-destructive">*</span></Label>
               <Textarea
                 name="description"
                 required
@@ -139,7 +143,7 @@ export function ListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Price</Label>
+              <Label>Price <span className="text-destructive">*</span></Label>
               <Input
                 name="price"
                 type="number"
@@ -149,7 +153,7 @@ export function ListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Type</Label>
+              <Label>Type <span className="text-destructive">*</span></Label>
               <select
                 name="type"
                 defaultValue={listing?.type ?? defaultType}
@@ -160,7 +164,7 @@ export function ListingForm({
               </select>
             </div>
             <div className="space-y-1.5">
-              <Label>Location</Label>
+              <Label>Location <span className="text-destructive">*</span></Label>
               <Input
                 name="location"
                 required
@@ -168,7 +172,7 @@ export function ListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Address</Label>
+              <Label>Address <span className="text-destructive">*</span></Label>
               <Input
                 name="address"
                 required
@@ -192,7 +196,7 @@ export function ListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Size (sqm)</Label>
+              <Label>Size (sqm) <span className="text-destructive">*</span></Label>
               <Input
                 name="size"
                 type="number"
@@ -202,7 +206,7 @@ export function ListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Status</Label>
+              <Label>Status <span className="text-destructive">*</span></Label>
               <select
                 name="status"
                 defaultValue={listing?.status ?? "Available"}
@@ -214,7 +218,7 @@ export function ListingForm({
               </select>
             </div>
             <div className="space-y-1.5">
-              <Label>Purchase Type</Label>
+              <Label>Purchase Type <span className="text-destructive">*</span></Label>
               <select
                 name="purchaseType"
                 defaultValue={listing?.purchaseType ?? "one_off"}
@@ -226,7 +230,7 @@ export function ListingForm({
               </select>
             </div>
             <div className="space-y-1.5">
-              <Label>Development Status</Label>
+              <Label>Development Status <span className="text-destructive">*</span></Label>
               <select
                 name="developmentStatus"
                 defaultValue={listing?.developmentStatus ?? "completed"}
@@ -295,7 +299,7 @@ export function ListingForm({
               />
             </div>
             <div className="col-span-2 space-y-1.5">
-              <Label>Images</Label>
+              <Label>Images <span className="text-destructive">*</span></Label>
               <ImageUpload value={images} onChange={setImages} />
             </div>
             <div className="col-span-2 space-y-1.5">

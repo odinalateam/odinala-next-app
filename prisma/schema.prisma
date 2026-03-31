@@ -137,6 +137,18 @@ model Listing {
   orders   Order[]
 }
 
+model Article {
+  id          String    @id @default(cuid())
+  title       String
+  content     String
+  coverImage  String?
+  author      String
+  status      String    @default("draft") // "draft" | "published"
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
 model Order {
   id                String   @id @default(cuid())
   userId            String
