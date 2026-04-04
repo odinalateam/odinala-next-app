@@ -15,7 +15,11 @@ const navOptions = [
   { label: "Logout", value: "logout" },
 ];
 
-export default function DashboardMobileNav() {
+export default function DashboardMobileNav({
+  unreadMessageCount = 0,
+}: {
+  unreadMessageCount?: number;
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -44,7 +48,9 @@ export default function DashboardMobileNav() {
       >
         {navOptions.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label}
+            {option.label === "Messages" && unreadMessageCount > 0
+              ? `Messages (${unreadMessageCount})`
+              : option.label}
           </option>
         ))}
       </select>

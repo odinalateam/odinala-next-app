@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/lib/auth-client";
@@ -12,6 +13,9 @@ import {
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { getUnreadCount } from "@/lib/actions/messages";
+import { usePolling } from "@/lib/hooks/use-polling";
 
 const sidebarItems = [
   {
@@ -36,9 +40,25 @@ const sidebarItems = [
   },
 ];
 
-export default function AccountSidebar() {
+export default function AccountSidebar({
+  unreadMessageCount: initialCount = 0,
+}: {
+  unreadMessageCount?: number;
+}) {
   const pathname = usePathname();
   const router = useRouter();
+  const [unreadCount, setUnreadCount] = useState(initialCount);
+
+  const pollUnread = useCallback(async () => {
+    try {
+      const count = await getUnreadCount();
+      setUnreadCount(count);
+    } catch {
+      // Silently ignore
+    }
+  }, []);
+
+  usePolling(pollUnread, 30000);
 
   const handleSignOut = async () => {
     await signOut({
@@ -82,6 +102,11 @@ export default function AccountSidebar() {
                 />
               </div>
               {item.label}
+              {item.label === "Messages" && unreadCount > 0 && (
+                <Badge className="ml-auto h-4.5 min-w-4.5 px-1.5 text-[10px]">
+                  {unreadCount}
+                </Badge>
+              )}
             </Link>
           );
         })}

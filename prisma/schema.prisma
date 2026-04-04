@@ -20,10 +20,12 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  sessions Session[]
-  accounts Account[]
-  profile  UserProfile?
-  orders   Order[]
+  sessions     Session[]
+  accounts     Account[]
+  profile      UserProfile?
+  orders       Order[]
+  conversations Conversation[]
+  sentMessages  Message[]      @relation("MessageSender")
 }
 
 model Session {
@@ -166,4 +168,30 @@ model Order {
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id           String   @id @default(cuid())
+  userId       String
+  topic        String
+  ticketNumber Int      @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages Message[]
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  senderRole     String
+  content        String
+  isReadByUser   Boolean  @default(false)
+  isReadByAdmin  Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
 }
