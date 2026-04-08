@@ -6,6 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -33,9 +40,16 @@ export function ListingForm({
 }: ListingFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [listingType, setListingType] = useState(listing?.type ?? defaultType);
+  const [status, setStatus] = useState(listing?.status ?? "Available");
   const [purchaseType, setPurchaseType] = useState(
     listing?.purchaseType ?? "one_off"
   );
+  const [developmentStatus, setDevelopmentStatus] = useState(
+    listing?.developmentStatus ?? "completed"
+  );
+  const [planStatus, setPlanStatus] = useState(listing?.planStatus ?? "");
+  const [categoryId, setCategoryId] = useState(listing?.categoryId ?? "");
   const [images, setImages] = useState<string[]>(listing?.images ?? []);
   const [documents, setDocuments] = useState<string[]>(
     listing?.documents ?? []
@@ -55,7 +69,7 @@ export function ListingForm({
       price: parseFloat(formData.get("price") as string),
       location: formData.get("location") as string,
       address: formData.get("address") as string,
-      type: formData.get("type") as string,
+      type: listingType,
       bedrooms: formData.get("bedrooms")
         ? parseInt(formData.get("bedrooms") as string)
         : null,
@@ -69,10 +83,10 @@ export function ListingForm({
         .filter(Boolean),
       images,
       documents,
-      status: formData.get("status") as string,
-      purchaseType: formData.get("purchaseType") as string,
-      developmentStatus: formData.get("developmentStatus") as string,
-      planStatus: (formData.get("planStatus") as string) || null,
+      status,
+      purchaseType,
+      developmentStatus,
+      planStatus: planStatus || null,
       maxInstallment:
         purchaseType === "recurring_plan" && formData.get("maxInstallment")
           ? parseInt(formData.get("maxInstallment") as string)
@@ -82,7 +96,7 @@ export function ListingForm({
         formData.get("pricePerInstallment")
           ? parseFloat(formData.get("pricePerInstallment") as string)
           : null,
-      categoryId: (formData.get("categoryId") as string) || null,
+      categoryId: categoryId || null,
       applicationFormUrl: applicationForm,
     };
 
@@ -154,14 +168,15 @@ export function ListingForm({
             </div>
             <div className="space-y-1.5">
               <Label>Type <span className="text-destructive">*</span></Label>
-              <select
-                name="type"
-                defaultValue={listing?.type ?? defaultType}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="Property">Property</option>
-                <option value="Land">Land</option>
-              </select>
+              <Select value={listingType} onValueChange={(v) => setListingType(v ?? defaultType)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Property">Property</SelectItem>
+                  <SelectItem value="Land">Land</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <Label>Location <span className="text-destructive">*</span></Label>
@@ -207,65 +222,69 @@ export function ListingForm({
             </div>
             <div className="space-y-1.5">
               <Label>Status <span className="text-destructive">*</span></Label>
-              <select
-                name="status"
-                defaultValue={listing?.status ?? "Available"}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="Available">Available</option>
-                <option value="Sold">Sold</option>
-                <option value="Under Offer">Under Offer</option>
-              </select>
+              <Select value={status} onValueChange={(v) => setStatus(v ?? "Available")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Available">Available</SelectItem>
+                  <SelectItem value="Sold">Sold</SelectItem>
+                  <SelectItem value="Under Offer">Under Offer</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <Label>Purchase Type <span className="text-destructive">*</span></Label>
-              <select
-                name="purchaseType"
-                defaultValue={listing?.purchaseType ?? "one_off"}
-                onChange={(e) => setPurchaseType(e.target.value)}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="one_off">One Off</option>
-                <option value="recurring_plan">Recurring Plan</option>
-              </select>
+              <Select value={purchaseType} onValueChange={(v) => setPurchaseType(v ?? "one_off")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="one_off">One Off</SelectItem>
+                  <SelectItem value="recurring_plan">Recurring Plan</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <Label>Development Status <span className="text-destructive">*</span></Label>
-              <select
-                name="developmentStatus"
-                defaultValue={listing?.developmentStatus ?? "completed"}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="ongoing">Ongoing</option>
-                <option value="completed">Completed</option>
-                <option value="uncompleted">Uncompleted</option>
-              </select>
+              <Select value={developmentStatus} onValueChange={(v) => setDevelopmentStatus(v ?? "completed")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ongoing">Ongoing</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="uncompleted">Uncompleted</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <Label>Plan Status</Label>
-              <select
-                name="planStatus"
-                defaultValue={listing?.planStatus ?? ""}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="">None</option>
-                <option value="off_plan">Off-Plan</option>
-              </select>
+              <Select value={planStatus} onValueChange={(v) => setPlanStatus(v ?? "")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="off_plan">Off-Plan</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <Label>Category</Label>
-              <select
-                name="categoryId"
-                defaultValue={listing?.categoryId ?? ""}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="">None</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+              <Select value={categoryId} onValueChange={(v) => setCategoryId(v ?? "")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">None</SelectItem>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             {purchaseType === "recurring_plan" && (
               <>

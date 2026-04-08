@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-[600px] flex items-center">
+    <section className="relative min-h-[400px] md:min-h-[600px] flex items-center">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -20,8 +20,8 @@ export function HeroSection() {
         <p className="text-xs tracking-wider text-white/70 uppercase mb-2">
           YOUR TRUSTED REAL ESTATE PARTNER
         </p>
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight text-white capitalize max-w-2xl">
-          Your partner in building <br />
+        <h1 className="text-3xl md:text-5xl font-bold leading-tight text-white capitalize max-w-2xl">
+          Your partner in building <br className="hidden md:block" />
           <span className="text-amber-500 italic">generational wealth</span> via
           real estate
         </h1>
@@ -33,7 +33,7 @@ export function HeroSection() {
         </p>
         <Link
           href="/properties"
-          className="flex w-1/5 gap-2 rounded-md bg-white  py-3 text-sm font-semibold tracking-wide text-primary ease-in transition-colors hover:bg-primary/90 hover:text-white  justify-center items-center"
+          className="inline-flex gap-2 rounded-md bg-white px-6 py-3 text-sm font-semibold tracking-wide text-primary ease-in transition-colors hover:bg-primary/90 hover:text-white justify-center items-center"
         >
           <HouseHeart className="h-5 w-5" />
           BROWSE PROPERTIES

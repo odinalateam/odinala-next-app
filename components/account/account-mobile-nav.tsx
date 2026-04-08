@@ -2,6 +2,13 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "@/lib/auth-client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const navOptions = [
   { label: "Profile", value: "/my-account" },
@@ -19,8 +26,8 @@ export default function AccountMobileNav({
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
+  const handleChange = async (value: string | null) => {
+    if (!value) return;
     if (value === "logout") {
       await signOut({
         fetchOptions: {
@@ -37,19 +44,20 @@ export default function AccountMobileNav({
 
   return (
     <div className="md:hidden mb-6">
-      <select
-        value={pathname}
-        onChange={handleChange}
-        className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
-      >
-        {navOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label === "Messages" && unreadMessageCount > 0
-              ? `Messages (${unreadMessageCount})`
-              : option.label}
-          </option>
-        ))}
-      </select>
+      <Select value={pathname} onValueChange={handleChange}>
+        <SelectTrigger className="w-full">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {navOptions.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label === "Messages" && unreadMessageCount > 0
+                ? `Messages (${unreadMessageCount})`
+                : option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }

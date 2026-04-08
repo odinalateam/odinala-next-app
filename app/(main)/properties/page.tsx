@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Properties | Odinala",
-  description: "Browse available properties across South-East Nigeria",
+  description: "Browse available properties across Nigeria",
 };
 
 export default async function PropertiesPage({
@@ -57,7 +57,7 @@ export default async function PropertiesPage({
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight">Properties</h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          Browse properties across South-East Nigeria
+          Browse properties across Nigeria
         </p>
       </div>
 

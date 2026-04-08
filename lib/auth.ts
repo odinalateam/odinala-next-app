@@ -5,6 +5,7 @@ import { nextCookies } from "better-auth/next-js";
 import { prisma } from "@/lib/prisma";
 import { sendEmail, APP_URL } from "@/lib/email";
 import { WelcomeEmail } from "@/emails/welcome";
+import { ResetPasswordEmail } from "@/emails/reset-password";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -15,6 +16,16 @@ export const auth = betterAuth({
     enabled: true,
     minPasswordLength: 8,
     maxPasswordLength: 128,
+    sendResetPassword: async ({ user, url }) => {
+      sendEmail({
+        to: user.email,
+        subject: "Reset Your Password - Odinala",
+        react: ResetPasswordEmail({
+          userName: user.name,
+          resetUrl: url,
+        }),
+      });
+    },
   },
 
   socialProviders: {

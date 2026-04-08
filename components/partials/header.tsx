@@ -1,7 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Moon, Search, Sun, LogOut, LayoutDashboard } from "lucide-react";
+import {
+  Moon,
+  Search,
+  Sun,
+  LogOut,
+  LayoutDashboard,
+  Menu,
+  X,
+  User,
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -19,8 +28,14 @@ export default function Navbar() {
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isAdmin = session?.user?.role === "admin";
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   // Search as you type — only on searchable listing pages
   const isSearchablePage =
@@ -73,11 +88,11 @@ export default function Navbar() {
   };
 
   return (
-    <div className="w-full h-14 border-b dark:border-neutral-800 border-neutral-300 flex justify-center">
-      <div className="max-w-6xl mx-auto w-full flex justify-between items-center px-4">
-        {/* left side */}
-        <Link href="/">
-          <div className="flex gap-2 justify-center items-center">
+    <div className="w-full border-b dark:border-neutral-800 border-neutral-300">
+      <div className="max-w-6xl mx-auto w-full flex items-center justify-between px-4 h-14">
+        {/* Logo */}
+        <Link href="/" className="shrink-0">
+          <div className="flex gap-2 items-center">
             <Image
               src="/brand/logo.png"
               height={30}
@@ -85,15 +100,13 @@ export default function Navbar() {
               alt=""
               className="dark:invert"
             />
-            <div>
-              <p className="font-bold text-lg">odinala</p>
-            </div>
+            <p className="font-bold text-lg">odinala</p>
           </div>
         </Link>
 
-        {/* center */}
-        <div className="flex items-center gap-2 bg-muted rounded-md px-3 py-1.5 w-full max-w-sm">
-          <Search className="w-4 h-4 text-muted-foreground" />
+        {/* Search bar - hidden on mobile, shown on md+ */}
+        <div className="hidden md:flex items-center gap-2 bg-muted rounded-md px-3 py-1.5 w-full max-w-sm mx-4">
+          <Search className="w-4 h-4 text-muted-foreground shrink-0" />
           <input
             type="text"
             placeholder="Search properties, lands, locations..."
@@ -104,8 +117,8 @@ export default function Navbar() {
           />
         </div>
 
-        {/* right side - links */}
-        <div className="flex items-center gap-4 text-sm">
+        {/* Desktop nav links - hidden on mobile */}
+        <div className="hidden md:flex items-center gap-4 text-sm shrink-0">
           <Link
             href="/"
             className={cn(
@@ -139,8 +152,6 @@ export default function Navbar() {
           >
             Lands
           </Link>
-
-          {/* <Separator orientation="vertical" /> */}
 
           {/* Auth state */}
           {isPending ? (
@@ -180,16 +191,14 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <>
-              <Link href="/auth/sign-in">
-                <Button variant="default" size="sm">
-                  Sign In
-                </Button>
-              </Link>
-            </>
+            <Link href="/auth/sign-in">
+              <Button variant="default" size="sm">
+                Sign In
+              </Button>
+            </Link>
           )}
 
-          <Separator orientation="vertical" />
+          <Separator orientation="vertical" className="h-5" />
 
           {/* theme toggle */}
           <button
@@ -200,7 +209,132 @@ export default function Navbar() {
             <Moon className="w-4 h-4 block dark:hidden" />
           </button>
         </div>
+
+        {/* Mobile: action buttons */}
+        <div className="flex md:hidden items-center gap-2">
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="cursor-pointer p-1.5"
+          >
+            <Sun className="w-4 h-4 hidden dark:block" />
+            <Moon className="w-4 h-4 block dark:hidden" />
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-1.5 cursor-pointer"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-border bg-background">
+          {/* Mobile search */}
+          <div className="px-4 py-3 border-b border-border">
+            <div className="flex items-center gap-2 bg-muted rounded-md px-3 py-2">
+              <Search className="w-4 h-4 text-muted-foreground shrink-0" />
+              <input
+                type="text"
+                placeholder="Search properties, lands, locations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+                className="bg-transparent text-sm outline-none w-full placeholder:text-muted-foreground"
+              />
+            </div>
+          </div>
+
+          {/* Mobile nav links */}
+          <div className="px-4 py-2">
+            <Link
+              href="/"
+              className={cn(
+                "block py-2.5 text-sm transition-colors",
+                pathname === "/"
+                  ? "text-foreground font-medium"
+                  : "text-muted-foreground"
+              )}
+            >
+              All Listings
+            </Link>
+            <Link
+              href="/properties"
+              className={cn(
+                "block py-2.5 text-sm transition-colors",
+                pathname.startsWith("/properties")
+                  ? "text-foreground font-medium"
+                  : "text-muted-foreground"
+              )}
+            >
+              Properties
+            </Link>
+            <Link
+              href="/lands"
+              className={cn(
+                "block py-2.5 text-sm transition-colors",
+                pathname.startsWith("/lands")
+                  ? "text-foreground font-medium"
+                  : "text-muted-foreground"
+              )}
+            >
+              Lands
+            </Link>
+
+            <div className="h-px bg-border my-2" />
+
+            {/* Auth state - mobile */}
+            {isPending ? null : session ? (
+              <>
+                <Link
+                  href="/my-account"
+                  className={cn(
+                    "flex items-center gap-2 py-2.5 text-sm transition-colors",
+                    pathname.startsWith("/my-account")
+                      ? "text-foreground font-medium"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  <User className="w-4 h-4" />
+                  My Account
+                </Link>
+                {isAdmin && (
+                  <Link
+                    href="/dashboard"
+                    className={cn(
+                      "flex items-center gap-2 py-2.5 text-sm transition-colors",
+                      pathname.startsWith("/dashboard")
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    Dashboard
+                  </Link>
+                )}
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 py-2.5 text-sm text-muted-foreground w-full cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link href="/auth/sign-in" className="block py-2.5">
+                <Button variant="default" size="sm" className="w-full">
+                  Sign In
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,8 @@ import { Loader2 } from "lucide-react";
 
 export function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,11 +30,11 @@ export function SignInForm() {
       {
         email,
         password,
-        callbackURL: "/",
+        callbackURL: redirectTo,
       },
       {
         onSuccess: () => {
-          router.push("/");
+          router.push(redirectTo);
           router.refresh();
         },
         onError: (ctx) => {
@@ -77,7 +79,7 @@ export function SignInForm() {
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
             <Link
-              href="#"
+              href="/auth/forgot-password"
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
               Forgot password?

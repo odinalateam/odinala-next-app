@@ -14,7 +14,7 @@ export function WelcomeEmail({ userName, appUrl }: WelcomeEmailProps) {
       <Text style={paragraph}>Hi {userName},</Text>
       <Text style={paragraph}>
         Thank you for creating your account with Odinala. We are your trusted
-        partner for property and land investments across South-East Nigeria.
+        partner for property and land investments across Nigeria.
       </Text>
       <Text style={paragraph}>
         To get started, please complete your profile and KYC verification. Once

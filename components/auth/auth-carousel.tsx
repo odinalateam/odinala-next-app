@@ -14,7 +14,7 @@ const slides: CarouselSlide[] = [
     image:
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80",
     title: "Find Your Dream Home",
-    subtitle: "Discover premium properties across South-East Nigeria",
+    subtitle: "Discover premium properties across Nigeria",
   },
   {
     image:
@@ -41,7 +41,7 @@ export function AuthCarousel() {
   }, []);
 
   return (
-    <div className="relative w-full lg:w-1/2 h-64 lg:h-screen overflow-hidden">
+    <div className="relative w-full lg:w-1/2 h-48 sm:h-64 lg:h-screen overflow-hidden">
       {slides.map((slide, index) => (
         <div
           key={index}
@@ -61,13 +61,13 @@ export function AuthCarousel() {
       ))}
 
       {/* Text overlay */}
-      <div className="absolute bottom-12 left-8 right-8 z-10 text-white">
-        <h2 className="text-3xl font-bold mb-2">{slides[current].title}</h2>
-        <p className="text-white/80 text-lg">{slides[current].subtitle}</p>
+      <div className="absolute bottom-8 lg:bottom-12 left-6 right-6 lg:left-8 lg:right-8 z-10 text-white">
+        <h2 className="text-xl lg:text-3xl font-bold mb-1 lg:mb-2">{slides[current].title}</h2>
+        <p className="text-white/80 text-sm lg:text-lg">{slides[current].subtitle}</p>
       </div>
 
       {/* Slide indicators */}
-      <div className="absolute bottom-6 left-8 flex gap-2 z-10">
+      <div className="absolute bottom-3 lg:bottom-6 left-6 lg:left-8 flex gap-2 z-10">
         {slides.map((_, index) => (
           <button
             key={index}

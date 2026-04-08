@@ -5,6 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { submitContactForm } from "@/lib/actions/contact";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -18,6 +25,7 @@ const subjects = [
 
 export function ContactForm() {
   const [pending, setPending] = useState(false);
+  const [subject, setSubject] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -30,12 +38,13 @@ export function ContactForm() {
       await submitContactForm({
         name: formData.get("name") as string,
         email: formData.get("email") as string,
-        subject: formData.get("subject") as string,
+        subject: subject as string,
         message: formData.get("message") as string,
       });
 
       toast.success("Message sent! We'll get back to you soon.");
       form.reset();
+      setSubject(null);
     } catch (err) {
       toast.error(
         err instanceof Error ? err.message : "Something went wrong"
@@ -70,23 +79,19 @@ export function ContactForm() {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="subject">Subject</Label>
-        <select
-          id="subject"
-          name="subject"
-          required
-          defaultValue=""
-          className="flex h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-        >
-          <option value="" disabled>
-            Select a subject
-          </option>
-          {subjects.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
+        <Label>Subject</Label>
+        <Select value={subject} onValueChange={setSubject} required>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a subject" />
+          </SelectTrigger>
+          <SelectContent>
+            {subjects.map((s) => (
+              <SelectItem key={s} value={s}>
+                {s}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-1.5">

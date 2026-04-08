@@ -6,6 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -36,6 +43,7 @@ interface ArticleFormProps {
 export function ArticleForm({ article }: ArticleFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(article?.status ?? "draft");
   const [coverImage, setCoverImage] = useState<string | null>(
     article?.coverImage ?? null
   );
@@ -50,7 +58,7 @@ export function ArticleForm({ article }: ArticleFormProps) {
       content: formData.get("content") as string,
       coverImage,
       author: formData.get("author") as string,
-      status: formData.get("status") as string,
+      status,
     };
 
     try {
@@ -125,14 +133,15 @@ export function ArticleForm({ article }: ArticleFormProps) {
             <Label>
               Status <span className="text-destructive">*</span>
             </Label>
-            <select
-              name="status"
-              defaultValue={article?.status ?? "draft"}
-              className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
+            <Select value={status} onValueChange={(v) => setStatus(v ?? "draft")}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="published">Published</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-1.5">
             <Label>Cover Image</Label>

@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Odinala - Property & Land Listings",
-  description: "Discover properties and land across South-East Nigeria",
+  description: "Discover properties and land across Nigeria",
 };
 
 export default function RootLayout({

@@ -1,20 +1,20 @@
 import { Suspense } from "react";
-import { SignInForm } from "@/components/auth/sign-in-form";
+import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 import { AuthCarousel } from "@/components/auth/auth-carousel";
 import { AuthFormWrapper } from "@/components/auth/auth-form-wrapper";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign In | Odinala",
+  title: "Reset Password | Odinala",
 };
 
-export default function SignInPage() {
+export default function ResetPasswordPage() {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
       <AuthCarousel />
       <AuthFormWrapper>
         <Suspense>
-          <SignInForm />
+          <ResetPasswordForm />
         </Suspense>
       </AuthFormWrapper>
     </div>

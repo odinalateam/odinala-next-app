@@ -62,7 +62,7 @@ export async function createConversation(topic: string) {
             senderId: adminUser.id,
             senderRole: "admin",
             content: introContent,
-            isReadByUser: false,
+            isReadByUser: true,
             isReadByAdmin: true,
           },
         },

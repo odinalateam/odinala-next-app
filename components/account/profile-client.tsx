@@ -6,6 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Pencil, CheckCircle2, Loader2 } from "lucide-react";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   updatePersonalInfo,
   updateFinancialInfo,
   verifyNINAction,
@@ -481,24 +488,27 @@ export function ProfileClient({ user, profile }: ProfileClientProps) {
               >
                 Employment Status
               </label>
-              <select
-                id="employmentStatus"
+              <Select
                 disabled={!editingFinancial}
                 value={financialInfo.employmentStatus}
-                onChange={(e) =>
+                onValueChange={(v) =>
                   setFinancialInfo({
                     ...financialInfo,
-                    employmentStatus: e.target.value,
+                    employmentStatus: v ?? "Employed",
                   })
                 }
-                className={inputClass}
               >
-                <option value="Employed">Employed</option>
-                <option value="Self-Employed">Self-Employed</option>
-                <option value="Unemployed">Unemployed</option>
-                <option value="Retired">Retired</option>
-                <option value="Student">Student</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Employed">Employed</SelectItem>
+                  <SelectItem value="Self-Employed">Self-Employed</SelectItem>
+                  <SelectItem value="Unemployed">Unemployed</SelectItem>
+                  <SelectItem value="Retired">Retired</SelectItem>
+                  <SelectItem value="Student">Student</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <label

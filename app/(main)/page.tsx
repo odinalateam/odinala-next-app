@@ -2,7 +2,6 @@ import { getPublicListings } from "@/lib/actions/public-listings";
 import { PropertyGrid } from "@/components/property-grid";
 import { HeroSection } from "@/components/home/hero-section";
 import { ValuePropositions } from "@/components/home/value-propositions";
-import { CompetitiveEdge } from "@/components/home/competitive-edge";
 import { HowItWorks } from "@/components/home/how-it-works";
 import { Testimonials } from "@/components/home/testimonials";
 
@@ -28,7 +27,7 @@ export default async function Home({
             {search ? `Results for "${search}"` : "Featured Listings"}
           </h2>
           <p className="text-muted-foreground mt-1 text-sm">
-            Discover properties and land across South-East Nigeria
+            Discover properties and land across Nigeria
           </p>
         </div>
 
@@ -45,7 +44,6 @@ export default async function Home({
 
       {!search && (
         <>
-          <CompetitiveEdge />
           <HowItWorks />
           <Testimonials />
         </>

@@ -51,6 +51,7 @@ export async function createArticle(data: {
   });
   revalidatePath("/dashboard/news");
   revalidatePath("/news");
+
   return article;
 }
 
@@ -66,19 +67,19 @@ export async function updateArticle(
 ) {
   await requireAdmin();
   const existing = await prisma.article.findUnique({ where: { id } });
+  const isNewlyPublished =
+    data.status === "published" && existing?.status !== "published";
   const article = await prisma.article.update({
     where: { id },
     data: {
       ...data,
-      publishedAt:
-        data.status === "published" && existing?.status !== "published"
-          ? new Date()
-          : existing?.publishedAt,
+      publishedAt: isNewlyPublished ? new Date() : existing?.publishedAt,
     },
   });
   revalidatePath("/dashboard/news");
   revalidatePath("/news");
   revalidatePath(`/news/${id}`);
+
   return article;
 }
 
