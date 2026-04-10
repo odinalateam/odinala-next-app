@@ -9,6 +9,8 @@ import { OrderApprovedEmail } from "@/emails/order-approved";
 import { OrderRejectedEmail } from "@/emails/order-rejected";
 import { OrderCompletedEmail } from "@/emails/order-completed";
 import { ApplicationFormReleasedEmail } from "@/emails/application-form-released";
+import { createNotification } from "@/lib/actions/notifications";
+import { NotificationType } from "@prisma/client";
 
 async function requireAdmin() {
   const session = await auth.api.getSession({
@@ -51,6 +53,13 @@ export async function updateOrderStatus(id: string, status: string) {
         appUrl: APP_URL,
       }),
     });
+    void createNotification({
+      userId: order.user.id,
+      type: NotificationType.ORDER_UPDATE,
+      title: "Order Approved",
+      body: `Your order for ${order.listing.name} has been approved.`,
+      link: "/my-account/orders",
+    });
   } else if (status === "Rejected") {
     sendEmail({
       to: order.user.email,
@@ -62,6 +71,13 @@ export async function updateOrderStatus(id: string, status: string) {
         appUrl: APP_URL,
       }),
     });
+    void createNotification({
+      userId: order.user.id,
+      type: NotificationType.ORDER_UPDATE,
+      title: "Order Update",
+      body: `Your order for ${order.listing.name} has been reviewed.`,
+      link: "/my-account/orders",
+    });
   } else if (status === "Completed") {
     sendEmail({
       to: order.user.email,
@@ -72,6 +88,13 @@ export async function updateOrderStatus(id: string, status: string) {
         orderId: order.id,
         appUrl: APP_URL,
       }),
+    });
+    void createNotification({
+      userId: order.user.id,
+      type: NotificationType.ORDER_UPDATE,
+      title: "Order Completed",
+      body: `Your order for ${order.listing.name} is complete!`,
+      link: "/my-account/orders",
     });
   }
 }
@@ -105,5 +128,12 @@ export async function releaseApplicationForm(orderId: string) {
       orderId,
       appUrl: APP_URL,
     }),
+  });
+  void createNotification({
+    userId: order.user.id,
+    type: NotificationType.ORDER_UPDATE,
+    title: "Application Form Available",
+    body: `Your application form for ${order.listing.name} is ready to download.`,
+    link: "/my-account/orders",
   });
 }

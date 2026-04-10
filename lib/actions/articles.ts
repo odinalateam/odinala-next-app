@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { NotificationType } from "@prisma/client";
+import { sendPushToUser } from "@/lib/push";
 
 async function requireAdmin() {
   const session = await auth.api.getSession({
@@ -52,6 +54,10 @@ export async function createArticle(data: {
   revalidatePath("/dashboard/news");
   revalidatePath("/news");
 
+  if (data.status === "published") {
+    void notifyAllUsersOfArticle(article.id, article.title);
+  }
+
   return article;
 }
 
@@ -80,7 +86,41 @@ export async function updateArticle(
   revalidatePath("/news");
   revalidatePath(`/news/${id}`);
 
+  if (isNewlyPublished) {
+    void notifyAllUsersOfArticle(article.id, article.title);
+  }
+
   return article;
+}
+
+async function notifyAllUsersOfArticle(
+  articleId: string,
+  title: string
+): Promise<void> {
+  const users = await prisma.user.findMany({
+    where: { role: "user", banned: false },
+    select: { id: true },
+  });
+  if (users.length === 0) return;
+
+  await prisma.notification.createMany({
+    data: users.map((u) => ({
+      userId: u.id,
+      type: NotificationType.ARTICLE_PUBLISHED,
+      title: "New Article Published",
+      body: title,
+      link: `/my-account/news-and-insights`,
+    })),
+    skipDuplicates: true,
+  });
+
+  users.forEach((u) =>
+    sendPushToUser(u.id, {
+      title: "New Article Published",
+      body: title,
+      url: `/my-account/news-and-insights`,
+    })
+  );
 }
 
 export async function deleteArticle(

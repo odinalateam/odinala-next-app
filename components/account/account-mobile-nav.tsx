@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import NotificationBell from "@/components/notifications/notification-bell";
 
 const navOptions = [
   { label: "Profile", value: "/my-account" },
@@ -20,8 +21,10 @@ const navOptions = [
 
 export default function AccountMobileNav({
   unreadMessageCount = 0,
+  initialUnreadNotificationCount = 0,
 }: {
   unreadMessageCount?: number;
+  initialUnreadNotificationCount?: number;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -43,7 +46,7 @@ export default function AccountMobileNav({
   };
 
   return (
-    <div className="md:hidden mb-6">
+    <div className="md:hidden mb-6 flex items-center gap-2">
       <Select value={pathname} onValueChange={handleChange}>
         <SelectTrigger className="w-full">
           <SelectValue />
@@ -58,6 +61,7 @@ export default function AccountMobileNav({
           ))}
         </SelectContent>
       </Select>
+      <NotificationBell initialUnreadCount={initialUnreadNotificationCount} />
     </div>
   );
 }

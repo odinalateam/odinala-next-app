@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { getUnreadCount } from "@/lib/actions/messages";
 import { usePolling } from "@/lib/hooks/use-polling";
+import NotificationBell from "@/components/notifications/notification-bell";
 
 const sidebarItems = [
   {
@@ -42,8 +43,10 @@ const sidebarItems = [
 
 export default function AccountSidebar({
   unreadMessageCount: initialCount = 0,
+  initialUnreadNotificationCount = 0,
 }: {
   unreadMessageCount?: number;
+  initialUnreadNotificationCount?: number;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -73,8 +76,9 @@ export default function AccountSidebar({
 
   return (
     <aside className="w-64 shrink-0">
-      <div className="mb-4 px-3">
+      <div className="mb-4 px-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold">My Account</h2>
+        <NotificationBell initialUnreadCount={initialUnreadNotificationCount} />
       </div>
       <nav className="flex flex-col gap-1">
         {sidebarItems.map((item) => {
