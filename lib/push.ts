@@ -1,11 +1,17 @@
 import webpush from "web-push";
 import { prisma } from "@/lib/prisma";
 
-webpush.setVapidDetails(
-  process.env.VAPID_SUBJECT!,
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-);
+let vapidInitialised = false;
+
+function initVapid() {
+  if (vapidInitialised) return;
+  webpush.setVapidDetails(
+    process.env.VAPID_SUBJECT!,
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+  );
+  vapidInitialised = true;
+}
 
 export interface PushPayload {
   title: string;
@@ -18,6 +24,14 @@ export interface PushPayload {
  * Stale subscriptions (410/404) are automatically removed from the DB.
  */
 export function sendPushToUser(userId: string, payload: PushPayload): void {
+  if (
+    !process.env.VAPID_SUBJECT ||
+    !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
+    !process.env.VAPID_PRIVATE_KEY
+  ) {
+    return;
+  }
+  initVapid();
   prisma.pushSubscription
     .findMany({ where: { userId } })
     .then((subs) => {
