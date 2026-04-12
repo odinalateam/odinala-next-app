@@ -39,9 +39,7 @@ export default function Navbar() {
 
   // Search as you type — only on searchable listing pages
   const isSearchablePage =
-    pathname === "/" ||
-    pathname === "/properties" ||
-    pathname === "/lands";
+    pathname === "/" || pathname === "/properties" || pathname === "/lands";
 
   // Live search-as-you-type on searchable listing pages only
   useEffect(() => {
@@ -119,7 +117,7 @@ export default function Navbar() {
 
         {/* Desktop nav links - hidden on mobile */}
         <div className="hidden md:flex items-center gap-4 text-sm shrink-0">
-          <Link
+          {/* <Link
             href="/"
             className={cn(
               "transition-colors",
@@ -129,7 +127,7 @@ export default function Navbar() {
             )}
           >
             All
-          </Link>
+          </Link> */}
           <Link
             href="/properties"
             className={cn(
