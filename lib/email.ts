@@ -24,37 +24,22 @@ interface SendEmailOptions {
   react: React.ReactElement;
 }
 
-/**
- * Fire-and-forget email sender.
- * Errors are logged silently so email failures never break application flow.
- */
-export function sendEmail({ to, subject, react }: SendEmailOptions): void {
+export async function sendEmail({ to, subject, react }: SendEmailOptions): Promise<void> {
   const client = getResend();
   if (!client) {
     console.warn("[Email] RESEND_API_KEY not configured, skipping email");
     return;
   }
 
-  client.emails
-    .send({
-      from: FROM_EMAIL,
-      to,
-      subject,
-      react,
-    })
-    .then((result) => {
-      if (result.error) {
-        console.error("[Email Error]", result.error);
-      }
-    })
-    .catch((error) => {
-      console.error("[Email Send Failed]", error);
-    });
+  const result = await client.emails.send({ from: FROM_EMAIL, to, subject, react });
+  if (result.error) {
+    console.error("[Email Error]", result.error);
+  }
 }
 
-export function sendAdminEmail({
+export async function sendAdminEmail({
   subject,
   react,
-}: Omit<SendEmailOptions, "to">): void {
-  sendEmail({ to: ADMIN_EMAIL, subject, react });
+}: Omit<SendEmailOptions, "to">): Promise<void> {
+  await sendEmail({ to: ADMIN_EMAIL, subject, react });
 }

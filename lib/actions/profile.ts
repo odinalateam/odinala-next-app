@@ -41,7 +41,7 @@ async function checkAndUpdateKycStatus(userId: string) {
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (user) {
-      sendEmail({
+      await sendEmail({
         to: user.email,
         subject: "Your KYC Verification is Complete - Odinala",
         react: KycVerifiedEmail({

@@ -84,7 +84,7 @@ export async function createOrder(data: {
   revalidatePath("/my-account/orders");
   revalidatePath("/dashboard/orders");
 
-  sendEmail({
+  await sendEmail({
     to: session.user.email,
     subject: "Order Confirmation - Odinala",
     react: OrderConfirmationEmail({
@@ -99,7 +99,7 @@ export async function createOrder(data: {
     }),
   });
 
-  sendAdminEmail({
+  await sendAdminEmail({
     subject: `New Order: ${listing.name} - Odinala`,
     react: AdminNewOrderEmail({
       userName: session.user.name,
@@ -152,7 +152,7 @@ export async function uploadFilledApplicationForm(
   revalidatePath("/my-account/orders");
   revalidatePath("/dashboard/orders");
 
-  sendAdminEmail({
+  await sendAdminEmail({
     subject: `Application Form Submitted: ${updatedOrder.listing.name} - Odinala`,
     react: AdminApplicationSubmittedEmail({
       userName: session.user.name,
@@ -185,7 +185,7 @@ export async function uploadProofOfPayment(orderId: string, url: string) {
   revalidatePath("/my-account/orders");
   revalidatePath("/dashboard/orders");
 
-  sendAdminEmail({
+  await sendAdminEmail({
     subject: `Proof of Payment Uploaded: ${updatedOrder.listing.name} - Odinala`,
     react: AdminProofOfPaymentEmail({
       userName: session.user.name,

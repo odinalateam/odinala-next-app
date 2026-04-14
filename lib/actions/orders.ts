@@ -43,7 +43,7 @@ export async function updateOrderStatus(id: string, status: string) {
   revalidatePath("/my-account/orders");
 
   if (status === "Approved") {
-    sendEmail({
+    await sendEmail({
       to: order.user.email,
       subject: "Your Order Has Been Approved - Odinala",
       react: OrderApprovedEmail({
@@ -61,7 +61,7 @@ export async function updateOrderStatus(id: string, status: string) {
       link: "/my-account/orders",
     });
   } else if (status === "Rejected") {
-    sendEmail({
+    await sendEmail({
       to: order.user.email,
       subject: "Order Update - Odinala",
       react: OrderRejectedEmail({
@@ -79,7 +79,7 @@ export async function updateOrderStatus(id: string, status: string) {
       link: "/my-account/orders",
     });
   } else if (status === "Completed") {
-    sendEmail({
+    await sendEmail({
       to: order.user.email,
       subject: "Your Order is Complete - Odinala",
       react: OrderCompletedEmail({
@@ -119,7 +119,7 @@ export async function releaseApplicationForm(orderId: string) {
   revalidatePath("/dashboard/orders");
   revalidatePath("/my-account/orders");
 
-  sendEmail({
+  await sendEmail({
     to: order.user.email,
     subject: "Application Form Available - Odinala",
     react: ApplicationFormReleasedEmail({

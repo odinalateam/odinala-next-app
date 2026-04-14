@@ -17,7 +17,7 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     maxPasswordLength: 128,
     sendResetPassword: async ({ user, url }) => {
-      sendEmail({
+      await sendEmail({
         to: user.email,
         subject: "Reset Your Password - Odinala",
         react: ResetPasswordEmail({
@@ -39,7 +39,7 @@ export const auth = betterAuth({
     user: {
       create: {
         after: async (user) => {
-          sendEmail({
+          await sendEmail({
             to: user.email,
             subject: "Welcome to Odinala",
             react: WelcomeEmail({

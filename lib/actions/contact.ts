@@ -29,7 +29,7 @@ export async function submitContactForm(data: ContactFormData) {
     throw new Error("Message must be at least 10 characters");
   }
 
-  sendAdminEmail({
+  await sendAdminEmail({
     subject: `Contact Inquiry: ${subject}`,
     react: ContactInquiryEmail({
       name: name.trim(),
