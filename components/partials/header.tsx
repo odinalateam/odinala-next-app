@@ -10,6 +10,10 @@ import {
   Menu,
   X,
   User,
+  Facebook,
+  Instagram,
+  Twitter,
+  Youtube,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -20,6 +24,7 @@ import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useDebounce } from "@/lib/hooks/use-debounce";
+import { SpecialText } from "@/components/ui/special-text";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
@@ -87,6 +92,65 @@ export default function Navbar() {
 
   return (
     <div className="w-full border-b dark:border-neutral-800 border-neutral-300">
+      {/* Top social bar */}
+      <div className="w-full bg-neutral-900 dark:bg-white text-white text-xs dark:text-black">
+        <div className="max-w-6xl mx-auto px-4 h-9 flex items-center justify-between">
+          {/* Socials */}
+          <div className="flex items-center gap-3">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="opacity-70 hover:opacity-100 transition-opacity"
+              aria-label="Facebook"
+            >
+              <Facebook className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://x.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="opacity-70 hover:opacity-100 transition-opacity"
+              aria-label="X (Twitter)"
+            >
+              <Twitter className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="opacity-70 hover:opacity-100 transition-opacity"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://tiktok.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="opacity-70 hover:opacity-100 transition-opacity"
+              aria-label="TikTok"
+            >
+              <svg
+                className="w-3.5 h-3.5"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
+              </svg>
+            </a>
+          </div>
+
+          {/* Center text */}
+          <p className="absolute left-1/2 -translate-x-1/2 tracking-wide font-medium text-[11px] hidden sm:block whitespace-nowrap capitalize">
+            Your trusted home for properties &amp; lands across Nigeria
+          </p>
+
+          {/* Right — empty spacer to balance */}
+          <div className="w-24" />
+        </div>
+      </div>
+
       <div className="max-w-6xl mx-auto w-full flex items-center justify-between px-4 h-14">
         {/* Logo */}
         <Link href="/" className="shrink-0">
@@ -149,6 +213,19 @@ export default function Navbar() {
             )}
           >
             Lands
+          </Link>
+          <Link
+            href="/tokenization"
+            className={cn(
+              "transition-colors",
+              pathname.startsWith("/tokenization")
+                ? "text-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <SpecialText speed={18} loop loopInterval={20000}>
+              Tokenization
+            </SpecialText>
           </Link>
 
           {/* Auth state */}
@@ -282,6 +359,17 @@ export default function Navbar() {
               )}
             >
               Lands
+            </Link>
+            <Link
+              href="/tokenization"
+              className={cn(
+                "block py-2.5 text-sm transition-colors",
+                pathname.startsWith("/tokenization")
+                  ? "text-foreground font-medium"
+                  : "text-muted-foreground"
+              )}
+            >
+              Tokenization
             </Link>
 
             <div className="h-px bg-border my-2" />

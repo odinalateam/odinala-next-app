@@ -5,6 +5,8 @@ import Navbar from "@/components/partials/header";
 import Footer from "@/components/partials/footer";
 import { ContactSection } from "@/components/partials/contact-section";
 import { CompareFloatingButton } from "@/components/compare/compare-floating-button";
+import { TokenizationPopup } from "@/components/home/tokenization-popup";
+import { BotpressChat } from "@/components/partials/botpress-chat";
 
 export default function MainLayout({
   children,
@@ -23,6 +25,8 @@ export default function MainLayout({
       <div className="flex-1">{children}</div>
       {!isDashboard && <ContactSection />}
       <CompareFloatingButton />
+      <TokenizationPopup />
+      <BotpressChat />
       <Footer />
     </div>
   );
