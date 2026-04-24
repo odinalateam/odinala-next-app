@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 
 const STORAGE_KEY = "odinala_tokenization_popup_seen";
+const RESHOW_AFTER_MS = 24 * 60 * 60 * 1000; // 1 day
 
 export function TokenizationPopup() {
   const pathname = usePathname();
@@ -21,7 +22,9 @@ export function TokenizationPopup() {
   useEffect(() => {
     if (pathname.startsWith("/tokenization")) return;
     if (typeof window === "undefined") return;
-    if (localStorage.getItem(STORAGE_KEY)) return;
+
+    const lastSeen = localStorage.getItem(STORAGE_KEY);
+    if (lastSeen && Date.now() - Number(lastSeen) < RESHOW_AFTER_MS) return;
 
     const timer = setTimeout(() => setOpen(true), 2000);
     return () => clearTimeout(timer);
@@ -29,7 +32,7 @@ export function TokenizationPopup() {
 
   const handleClose = () => {
     setOpen(false);
-    localStorage.setItem(STORAGE_KEY, "1");
+    localStorage.setItem(STORAGE_KEY, String(Date.now()));
   };
 
   if (pathname.startsWith("/tokenization")) return null;
