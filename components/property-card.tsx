@@ -21,9 +21,10 @@ const gradients = [
 
 interface PropertyCardProps {
   property: ListingWithCategory;
+  secondaryPrice?: string;
 }
 
-export function PropertyCard({ property }: PropertyCardProps) {
+export function PropertyCard({ property, secondaryPrice }: PropertyCardProps) {
   const hasImage = property.images.length > 0;
   const gradientIndex =
     Math.abs(property.id.charCodeAt(0)) % gradients.length;
@@ -64,9 +65,16 @@ export function PropertyCard({ property }: PropertyCardProps) {
             <span className="truncate">{property.location}</span>
           </p>
         </div>
-        <p className="text-sm font-medium text-foreground whitespace-nowrap">
-          {formatPrice(property.price)}
-        </p>
+        <div className="text-right shrink-0">
+          <p className="text-sm font-medium text-foreground whitespace-nowrap">
+            {formatPrice(property.price)}
+          </p>
+          {secondaryPrice && (
+            <p className="text-xs text-muted-foreground whitespace-nowrap mt-0.5">
+              ≈ {secondaryPrice}
+            </p>
+          )}
+        </div>
       </div>
     </Link>
   );

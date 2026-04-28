@@ -73,18 +73,19 @@ export function TokenizationPopup() {
                     New Opportunity
                   </p>
                   <h2 className="text-xl sm:text-2xl font-bold tracking-tight leading-tight">
-                    OWN A PIECE OF NIGERIA&rsquo;S FUTURE
+                    OWN PROPERTY BACK HOME. PAY IN YOUR CURRENCY.
                   </h2>
                   <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                    Invest in premium Nigerian real estate through blockchain-powered
-                    tokenization — starting with any budget.
+                    Invest in premium Nigerian real estate from anywhere in the
+                    world. You pay in USD, GBP, or EUR — we handle everything
+                    else.
                   </p>
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <Link href="/tokenization" onClick={handleClose}>
                     <button className="w-full bg-foreground text-background text-sm font-semibold py-2.5 px-4 rounded-lg hover:opacity-90 transition-opacity cursor-pointer">
-                      LEARN MORE
+                      SEE HOW IT WORKS
                     </button>
                   </Link>
                   <button
