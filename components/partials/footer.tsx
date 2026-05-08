@@ -19,8 +19,8 @@ export default function Footer() {
               <span className="font-bold text-lg">odinala</span>
             </Link>
             <p className="mt-3 text-sm text-background/60 leading-relaxed">
-              Your trusted platform for properties and land across South-East
-              Nigeria. Find your perfect home or investment.
+              Your trusted platform for properties and land across Nigeria.
+              Find your perfect home or investment.
             </p>
           </div>
 
@@ -50,6 +50,14 @@ export default function Footer() {
                   className="hover:text-background transition-colors"
                 >
                   Careers
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/news"
+                  className="hover:text-background transition-colors"
+                >
+                  News & Insights
                 </Link>
               </li>
             </ul>

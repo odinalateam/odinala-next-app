@@ -9,6 +9,13 @@ import { Sheet } from "@/components/ui/sheet";
 import { OrderDetailPanel } from "./order-detail-panel";
 import { UserDetailPanel } from "@/components/dashboard/users/user-detail-panel";
 import { formatPrice } from "@/lib/format";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function getStatusColor(status: string) {
   switch (status) {
@@ -125,31 +132,33 @@ export function OrdersClient({ data }: { data: OrderWithFullRelations[] }) {
         <span className="text-sm text-muted-foreground whitespace-nowrap">
           Filter Type:
         </span>
-        <select
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-          className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-        >
-          <option value="all">All</option>
-          <option value="Property">Property</option>
-          <option value="Land">Land</option>
-        </select>
+        <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v ?? "all")}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="Property">Property</SelectItem>
+            <SelectItem value="Land">Land</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex items-center gap-1.5">
         <span className="text-sm text-muted-foreground whitespace-nowrap">
           Filter Status:
         </span>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-        >
-          <option value="all">All</option>
-          <option value="Pending">Pending</option>
-          <option value="Approved">Approved</option>
-          <option value="Rejected">Rejected</option>
-          <option value="Completed">Completed</option>
-        </select>
+        <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v ?? "all")}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="Pending">Pending</SelectItem>
+            <SelectItem value="Approved">Approved</SelectItem>
+            <SelectItem value="Rejected">Rejected</SelectItem>
+            <SelectItem value="Completed">Completed</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );

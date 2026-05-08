@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import DashboardSidebar from "@/components/dashboard/dashboard-sidebar";
 import DashboardMobileNav from "@/components/dashboard/dashboard-mobile-nav";
+import { getUnreadCount } from "@/lib/actions/messages";
 
 export default async function DashboardLayout({
   children,
@@ -21,12 +22,14 @@ export default async function DashboardLayout({
     redirect("/");
   }
 
+  const unreadMessageCount = await getUnreadCount();
+
   return (
     <div className="max-w-6xl mx-auto w-full px-4 py-8">
-      <DashboardMobileNav />
+      <DashboardMobileNav unreadMessageCount={unreadMessageCount} />
       <div className="flex gap-8">
         <div className="hidden md:block">
-          <DashboardSidebar />
+          <DashboardSidebar unreadMessageCount={unreadMessageCount} />
         </div>
         <main className="flex-1 min-w-0">{children}</main>
       </div>

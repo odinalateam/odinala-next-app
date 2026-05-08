@@ -58,6 +58,22 @@ export async function getAvailableFeatures(): Promise<string[]> {
   return Array.from(featureSet).sort();
 }
 
+export async function getPriceRange(type?: string): Promise<{ min: number; max: number }> {
+  const result = await prisma.listing.aggregate({
+    _min: { price: true },
+    _max: { price: true },
+    where: {
+      isVisible: true,
+      status: "Available",
+      ...(type && { type }),
+    },
+  });
+  return {
+    min: result._min.price ?? 0,
+    max: result._max.price ?? 100_000_000,
+  };
+}
+
 export async function getPublicListingById(id: string) {
   return prisma.listing.findUnique({
     where: { id },

@@ -5,6 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -19,6 +26,7 @@ import { Plus } from "lucide-react";
 export function CategoryForm({ category }: { category?: Category }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState(category?.type ?? "Property");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,7 +34,7 @@ export function CategoryForm({ category }: { category?: Category }) {
     const formData = new FormData(e.currentTarget);
     const data = {
       name: formData.get("name") as string,
-      type: formData.get("type") as string,
+      type,
     };
 
     try {
@@ -75,14 +83,15 @@ export function CategoryForm({ category }: { category?: Category }) {
           </div>
           <div className="space-y-1.5">
             <Label>Type</Label>
-            <select
-              name="type"
-              defaultValue={category?.type ?? "Property"}
-              className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-            >
-              <option value="Property">Property</option>
-              <option value="Land">Land</option>
-            </select>
+            <Select value={type} onValueChange={(v) => setType(v ?? "Property")}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Property">Property</SelectItem>
+                <SelectItem value="Land">Land</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <DialogFooter>
             <Button type="submit" disabled={loading}>

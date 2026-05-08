@@ -3,6 +3,9 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { admin } from "better-auth/plugins";
 import { nextCookies } from "better-auth/next-js";
 import { prisma } from "@/lib/prisma";
+import { sendEmail, APP_URL } from "@/lib/email";
+import { WelcomeEmail } from "@/emails/welcome";
+import { ResetPasswordEmail } from "@/emails/reset-password";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -13,12 +16,39 @@ export const auth = betterAuth({
     enabled: true,
     minPasswordLength: 8,
     maxPasswordLength: 128,
+    sendResetPassword: async ({ user, url }) => {
+      await sendEmail({
+        to: user.email,
+        subject: "Reset Your Password - Odinala",
+        react: ResetPasswordEmail({
+          userName: user.name,
+          resetUrl: url,
+        }),
+      });
+    },
   },
 
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+  },
+
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await sendEmail({
+            to: user.email,
+            subject: "Welcome to Odinala",
+            react: WelcomeEmail({
+              userName: user.name,
+              appUrl: APP_URL,
+            }),
+          });
+        },
+      },
     },
   },
 

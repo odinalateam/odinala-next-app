@@ -45,6 +45,29 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ file }) => {
       return { url: file.ufsUrl };
     }),
+  applicationForm: f({
+    pdf: { maxFileSize: "8MB", maxFileCount: 1 },
+  })
+    .middleware(async () => {
+      const session = await requireAdmin();
+      return { userId: session.user.id };
+    })
+    .onUploadComplete(async ({ file }) => {
+      return { url: file.ufsUrl };
+    }),
+
+  filledApplicationForm: f({
+    pdf: { maxFileSize: "8MB", maxFileCount: 1 },
+    image: { maxFileSize: "4MB", maxFileCount: 1 },
+  })
+    .middleware(async () => {
+      const session = await requireUser();
+      return { userId: session.user.id };
+    })
+    .onUploadComplete(async ({ file }) => {
+      return { url: file.ufsUrl };
+    }),
+
   proofOfPayment: f({
     image: { maxFileSize: "4MB", maxFileCount: 1 },
     pdf: { maxFileSize: "8MB", maxFileCount: 1 },

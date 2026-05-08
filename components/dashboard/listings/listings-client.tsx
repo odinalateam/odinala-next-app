@@ -12,6 +12,13 @@ import { deleteListing, toggleListingVisibility } from "@/lib/actions/listings";
 import { Switch } from "@/components/ui/switch";
 import { ListingForm } from "./listing-form";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function getStatusColor(status: string) {
   switch (status) {
@@ -36,6 +43,8 @@ export function ListingsClient({
   const [activeTab, setActiveTab] = useState<"Property" | "Land">("Property");
   const [deleting, setDeleting] = useState<string | null>(null);
   const [toggling, setToggling] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [locationFilter, setLocationFilter] = useState<string>("all");
 
   const handleToggleVisibility = async (id: string, currentValue: boolean) => {
     const newValue = !currentValue;
@@ -50,7 +59,16 @@ export function ListingsClient({
     });
   };
 
-  const filtered = data.filter((l) => l.type === activeTab);
+  const filtered = data.filter((l) => {
+    if (l.type !== activeTab) return false;
+    if (statusFilter !== "all" && l.status !== statusFilter) return false;
+    if (locationFilter !== "all" && l.location !== locationFilter) return false;
+    return true;
+  });
+
+  const locations = [
+    ...new Set(data.filter((l) => l.type === activeTab).map((l) => l.location)),
+  ].sort();
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this listing?")) return;
@@ -162,6 +180,34 @@ export function ListingsClient({
         data={filtered}
         searchKey="name"
         searchPlaceholder="Search listings..."
+        filterComponent={
+          <div className="flex items-center gap-2">
+            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v ?? "all")}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="Available">Available</SelectItem>
+                <SelectItem value="Sold">Sold</SelectItem>
+                <SelectItem value="Under Offer">Under Offer</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={locationFilter} onValueChange={(v) => setLocationFilter(v ?? "all")}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Locations</SelectItem>
+                {locations.map((loc) => (
+                  <SelectItem key={loc} value={loc}>
+                    {loc}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        }
       />
     </div>
   );

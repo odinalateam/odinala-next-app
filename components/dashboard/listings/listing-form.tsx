@@ -6,6 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -15,7 +22,8 @@ import {
 } from "@/components/ui/dialog";
 import { createListing, updateListing } from "@/lib/actions/listings";
 import type { ListingWithCategory, Category } from "@/lib/types";
-import { Plus } from "lucide-react";
+import { Plus, FileText, X } from "lucide-react";
+import { UploadDropzone } from "@/lib/uploadthing";
 import { ImageUpload } from "./image-upload";
 import { DocumentUpload } from "./document-upload";
 
@@ -32,12 +40,22 @@ export function ListingForm({
 }: ListingFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [listingType, setListingType] = useState(listing?.type ?? defaultType);
+  const [status, setStatus] = useState(listing?.status ?? "Available");
   const [purchaseType, setPurchaseType] = useState(
     listing?.purchaseType ?? "one_off"
   );
+  const [developmentStatus, setDevelopmentStatus] = useState(
+    listing?.developmentStatus ?? "completed"
+  );
+  const [planStatus, setPlanStatus] = useState(listing?.planStatus ?? "");
+  const [categoryId, setCategoryId] = useState(listing?.categoryId ?? "");
   const [images, setImages] = useState<string[]>(listing?.images ?? []);
   const [documents, setDocuments] = useState<string[]>(
     listing?.documents ?? []
+  );
+  const [applicationForm, setApplicationForm] = useState<string | null>(
+    listing?.applicationFormUrl ?? null
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,7 +69,7 @@ export function ListingForm({
       price: parseFloat(formData.get("price") as string),
       location: formData.get("location") as string,
       address: formData.get("address") as string,
-      type: formData.get("type") as string,
+      type: listingType,
       bedrooms: formData.get("bedrooms")
         ? parseInt(formData.get("bedrooms") as string)
         : null,
@@ -65,10 +83,10 @@ export function ListingForm({
         .filter(Boolean),
       images,
       documents,
-      status: formData.get("status") as string,
-      purchaseType: formData.get("purchaseType") as string,
-      developmentStatus: formData.get("developmentStatus") as string,
-      planStatus: (formData.get("planStatus") as string) || null,
+      status,
+      purchaseType,
+      developmentStatus,
+      planStatus: planStatus || null,
       maxInstallment:
         purchaseType === "recurring_plan" && formData.get("maxInstallment")
           ? parseInt(formData.get("maxInstallment") as string)
@@ -78,7 +96,8 @@ export function ListingForm({
         formData.get("pricePerInstallment")
           ? parseFloat(formData.get("pricePerInstallment") as string)
           : null,
-      categoryId: (formData.get("categoryId") as string) || null,
+      categoryId: categoryId || null,
+      applicationFormUrl: applicationForm,
     };
 
     try {
@@ -116,9 +135,13 @@ export function ListingForm({
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <p className="text-xs text-muted-foreground">
+            <span className="text-destructive">*</span> indicates a required
+            field
+          </p>
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2 space-y-1.5">
-              <Label>Name</Label>
+              <Label>Name <span className="text-destructive">*</span></Label>
               <Input
                 name="name"
                 required
@@ -126,7 +149,7 @@ export function ListingForm({
               />
             </div>
             <div className="col-span-2 space-y-1.5">
-              <Label>Description</Label>
+              <Label>Description <span className="text-destructive">*</span></Label>
               <Textarea
                 name="description"
                 required
@@ -134,7 +157,7 @@ export function ListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Price</Label>
+              <Label>Price <span className="text-destructive">*</span></Label>
               <Input
                 name="price"
                 type="number"
@@ -144,18 +167,19 @@ export function ListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Type</Label>
-              <select
-                name="type"
-                defaultValue={listing?.type ?? defaultType}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="Property">Property</option>
-                <option value="Land">Land</option>
-              </select>
+              <Label>Type <span className="text-destructive">*</span></Label>
+              <Select value={listingType} onValueChange={(v) => setListingType(v ?? defaultType)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Property">Property</SelectItem>
+                  <SelectItem value="Land">Land</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>Location</Label>
+              <Label>Location <span className="text-destructive">*</span></Label>
               <Input
                 name="location"
                 required
@@ -163,7 +187,7 @@ export function ListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Address</Label>
+              <Label>Address <span className="text-destructive">*</span></Label>
               <Input
                 name="address"
                 required
@@ -187,7 +211,7 @@ export function ListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Size (sqm)</Label>
+              <Label>Size (sqm) <span className="text-destructive">*</span></Label>
               <Input
                 name="size"
                 type="number"
@@ -197,66 +221,70 @@ export function ListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Status</Label>
-              <select
-                name="status"
-                defaultValue={listing?.status ?? "Available"}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="Available">Available</option>
-                <option value="Sold">Sold</option>
-                <option value="Under Offer">Under Offer</option>
-              </select>
+              <Label>Status <span className="text-destructive">*</span></Label>
+              <Select value={status} onValueChange={(v) => setStatus(v ?? "Available")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Available">Available</SelectItem>
+                  <SelectItem value="Sold">Sold</SelectItem>
+                  <SelectItem value="Under Offer">Under Offer</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>Purchase Type</Label>
-              <select
-                name="purchaseType"
-                defaultValue={listing?.purchaseType ?? "one_off"}
-                onChange={(e) => setPurchaseType(e.target.value)}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="one_off">One Off</option>
-                <option value="recurring_plan">Recurring Plan</option>
-              </select>
+              <Label>Purchase Type <span className="text-destructive">*</span></Label>
+              <Select value={purchaseType} onValueChange={(v) => setPurchaseType(v ?? "one_off")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="one_off">One Off</SelectItem>
+                  <SelectItem value="recurring_plan">Recurring Plan</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>Development Status</Label>
-              <select
-                name="developmentStatus"
-                defaultValue={listing?.developmentStatus ?? "completed"}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="ongoing">Ongoing</option>
-                <option value="completed">Completed</option>
-                <option value="uncompleted">Uncompleted</option>
-              </select>
+              <Label>Development Status <span className="text-destructive">*</span></Label>
+              <Select value={developmentStatus} onValueChange={(v) => setDevelopmentStatus(v ?? "completed")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ongoing">Ongoing</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="uncompleted">Uncompleted</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <Label>Plan Status</Label>
-              <select
-                name="planStatus"
-                defaultValue={listing?.planStatus ?? ""}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="">None</option>
-                <option value="off_plan">Off-Plan</option>
-              </select>
+              <Select value={planStatus} onValueChange={(v) => setPlanStatus(v ?? "")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="off_plan">Off-Plan</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <Label>Category</Label>
-              <select
-                name="categoryId"
-                defaultValue={listing?.categoryId ?? ""}
-                className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus:border-ring dark:bg-input/30"
-              >
-                <option value="">None</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+              <Select value={categoryId} onValueChange={(v) => setCategoryId(v ?? "")}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">None</SelectItem>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             {purchaseType === "recurring_plan" && (
               <>
@@ -290,12 +318,59 @@ export function ListingForm({
               />
             </div>
             <div className="col-span-2 space-y-1.5">
-              <Label>Images</Label>
+              <Label>Images <span className="text-destructive">*</span></Label>
               <ImageUpload value={images} onChange={setImages} />
             </div>
             <div className="col-span-2 space-y-1.5">
               <Label>Documents (PDF)</Label>
               <DocumentUpload value={documents} onChange={setDocuments} />
+            </div>
+            <div className="col-span-2 space-y-1.5">
+              <Label>Application Form (optional)</Label>
+              {applicationForm ? (
+                <div className="flex items-center gap-2 rounded-lg border border-input p-2">
+                  <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <a
+                    href={applicationForm}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-primary hover:underline truncate"
+                  >
+                    Application Form
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setApplicationForm(null)}
+                    className="ml-auto shrink-0 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ) : (
+                <UploadDropzone
+                  endpoint="applicationForm"
+                  onClientUploadComplete={(res) => {
+                    if (res?.[0]?.serverData?.url) {
+                      setApplicationForm(res[0].serverData.url);
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    alert(`Upload failed: ${error.message}`);
+                  }}
+                  appearance={{
+                    container: "border-border py-4",
+                    uploadIcon: "text-muted-foreground",
+                    label: "text-sm text-foreground",
+                    allowedContent: "text-xs text-muted-foreground",
+                    button:
+                      "bg-primary text-primary-foreground text-xs px-3 py-1.5 h-8 ut-ready:bg-primary ut-uploading:bg-primary/50",
+                  }}
+                  content={{
+                    label: "Upload application form",
+                    allowedContent: "PDF up to 8MB",
+                  }}
+                />
+              )}
             </div>
           </div>
           <DialogFooter>

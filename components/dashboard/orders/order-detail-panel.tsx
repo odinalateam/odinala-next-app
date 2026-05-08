@@ -5,9 +5,9 @@ import type { OrderWithFullRelations } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { updateOrderStatus } from "@/lib/actions/orders";
+import { updateOrderStatus, releaseApplicationForm } from "@/lib/actions/orders";
 import { formatPrice } from "@/lib/format";
-import { FileText, ExternalLink } from "lucide-react";
+import { FileText, ExternalLink, CheckCircle2 } from "lucide-react";
 import {
   SheetContent,
   SheetHeader,
@@ -110,6 +110,80 @@ export function OrderDetailPanel({
           <Separator className="mb-3" />
           <InfoRow label="Name" value={order.user.name} />
           <InfoRow label="Email" value={order.user.email} />
+        </div>
+
+        {/* Application Form */}
+        <div>
+          <h3 className="text-sm font-medium mb-2">Application Form</h3>
+          <Separator className="mb-3" />
+          {!order.listing.applicationFormUrl ? (
+            <p className="text-sm text-muted-foreground">
+              No application form for this listing
+            </p>
+          ) : !order.applicationFormReleased ? (
+            <div className="space-y-3">
+              <a
+                href={order.listing.applicationFormUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-primary hover:underline"
+              >
+                <FileText className="w-4 h-4" />
+                View Form
+                <ExternalLink className="w-3 h-3" />
+              </a>
+              <Button
+                size="sm"
+                onClick={async () => {
+                  setLoading(true);
+                  try {
+                    await releaseApplicationForm(order.id);
+                    onClose();
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                disabled={loading}
+              >
+                {loading ? "Releasing..." : "Release Application Form"}
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                <span className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+                  Form released to buyer
+                </span>
+              </div>
+              <a
+                href={order.listing.applicationFormUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-primary hover:underline"
+              >
+                <FileText className="w-4 h-4" />
+                View Original Form
+                <ExternalLink className="w-3 h-3" />
+              </a>
+              {order.filledApplicationFormUrl ? (
+                <a
+                  href={order.filledApplicationFormUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm text-primary hover:underline"
+                >
+                  <FileText className="w-4 h-4" />
+                  View Filled Form (from buyer)
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Buyer has not uploaded filled form yet
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Proof of Payment */}

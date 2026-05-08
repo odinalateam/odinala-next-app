@@ -43,6 +43,7 @@ export async function createListing(data: {
   maxInstallment?: number | null;
   pricePerInstallment?: number | null;
   categoryId?: string | null;
+  applicationFormUrl?: string | null;
 }) {
   await requireAdmin();
   await prisma.listing.create({ data });
@@ -72,6 +73,7 @@ export async function updateListing(
     maxInstallment?: number | null;
     pricePerInstallment?: number | null;
     categoryId?: string | null;
+    applicationFormUrl?: string | null;
   }
 ) {
   await requireAdmin();

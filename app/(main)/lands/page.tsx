@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Lands | Odinala",
-  description: "Browse available land across South-East Nigeria",
+  description: "Browse available land across Nigeria",
 };
 
 export default async function LandsPage({
@@ -24,7 +24,7 @@ export default async function LandsPage({
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight">Lands</h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          Browse land listings across South-East Nigeria
+          Browse land listings across Nigeria
         </p>
       </div>
 

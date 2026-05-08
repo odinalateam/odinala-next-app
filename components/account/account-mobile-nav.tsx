@@ -2,6 +2,14 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "@/lib/auth-client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import NotificationBell from "@/components/notifications/notification-bell";
 
 const navOptions = [
   { label: "Profile", value: "/my-account" },
@@ -11,12 +19,18 @@ const navOptions = [
   { label: "Logout", value: "logout" },
 ];
 
-export default function AccountMobileNav() {
+export default function AccountMobileNav({
+  unreadMessageCount = 0,
+  initialUnreadNotificationCount = 0,
+}: {
+  unreadMessageCount?: number;
+  initialUnreadNotificationCount?: number;
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
+  const handleChange = async (value: string | null) => {
+    if (!value) return;
     if (value === "logout") {
       await signOut({
         fetchOptions: {
@@ -32,18 +46,22 @@ export default function AccountMobileNav() {
   };
 
   return (
-    <div className="md:hidden mb-6">
-      <select
-        value={pathname}
-        onChange={handleChange}
-        className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
-      >
-        {navOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+    <div className="md:hidden mb-6 flex items-center gap-2">
+      <Select value={pathname} onValueChange={handleChange}>
+        <SelectTrigger className="w-full">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {navOptions.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label === "Messages" && unreadMessageCount > 0
+                ? `Messages (${unreadMessageCount})`
+                : option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <NotificationBell initialUnreadCount={initialUnreadNotificationCount} />
     </div>
   );
 }

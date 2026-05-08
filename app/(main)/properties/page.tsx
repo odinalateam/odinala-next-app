@@ -1,6 +1,7 @@
 import {
   getPublicListings,
   getAvailableFeatures,
+  getPriceRange,
 } from "@/lib/actions/public-listings";
 import { PropertyGrid } from "@/components/property-grid";
 import { PropertyFilters } from "@/components/properties/property-filters";
@@ -8,7 +9,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Properties | Odinala",
-  description: "Browse available properties across South-East Nigeria",
+  description: "Browse available properties across Nigeria",
 };
 
 export default async function PropertiesPage({
@@ -45,9 +46,10 @@ export default async function PropertiesPage({
         : undefined,
   };
 
-  const [listings, availableFeatures] = await Promise.all([
+  const [listings, availableFeatures, priceRange] = await Promise.all([
     getPublicListings(filters),
     getAvailableFeatures(),
+    getPriceRange("Property"),
   ]);
 
   return (
@@ -55,13 +57,13 @@ export default async function PropertiesPage({
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight">Properties</h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          Browse properties across South-East Nigeria
+          Browse properties across Nigeria
         </p>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
         <aside className="lg:w-64 shrink-0">
-          <PropertyFilters availableFeatures={availableFeatures} />
+          <PropertyFilters availableFeatures={availableFeatures} priceRange={priceRange} />
         </aside>
 
         <div className="flex-1 min-w-0">
