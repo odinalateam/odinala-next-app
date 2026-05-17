@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { X } from "lucide-react";
+import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import {
   Dialog,
-  DialogContent,
   DialogOverlay,
   DialogPortal,
 } from "@/components/ui/dialog";
@@ -41,13 +41,9 @@ export function TokenizationPopup() {
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
       <DialogPortal>
         <DialogOverlay />
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            data-slot="dialog-content"
-            className="relative w-full max-w-2xl overflow-hidden rounded-xl bg-background ring-1 ring-foreground/10 shadow-2xl data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 duration-150"
-            data-open={open ? "" : undefined}
-            data-closed={!open ? "" : undefined}
-          >
+        <DialogPrimitive.Popup
+          className="fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl mx-4 overflow-hidden rounded-xl bg-background ring-1 ring-foreground/10 shadow-2xl data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 duration-150"
+        >
             <div className="flex flex-col sm:flex-row min-h-[340px]">
               {/* Left — image */}
               <div className="relative sm:w-1/2 h-48 sm:h-auto shrink-0 overflow-hidden bg-neutral-900">
@@ -110,8 +106,7 @@ export function TokenizationPopup() {
             >
               <X className="w-3.5 h-3.5" />
             </button>
-          </div>
-        </div>
+        </DialogPrimitive.Popup>
       </DialogPortal>
     </Dialog>
   );

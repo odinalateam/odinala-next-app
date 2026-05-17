@@ -34,6 +34,7 @@ export async function sendEmail({ to, subject, react }: SendEmailOptions): Promi
   const result = await client.emails.send({ from: FROM_EMAIL, to, subject, react });
   if (result.error) {
     console.error("[Email Error]", result.error);
+    throw new Error(`Failed to send email: ${result.error.message}`);
   }
 }
 
@@ -41,5 +42,8 @@ export async function sendAdminEmail({
   subject,
   react,
 }: Omit<SendEmailOptions, "to">): Promise<void> {
+  if (!ADMIN_EMAIL) {
+    throw new Error("ADMIN_EMAIL is not configured");
+  }
   await sendEmail({ to: ADMIN_EMAIL, subject, react });
 }

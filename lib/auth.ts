@@ -39,14 +39,18 @@ export const auth = betterAuth({
     user: {
       create: {
         after: async (user) => {
-          await sendEmail({
-            to: user.email,
-            subject: "Welcome to Odinala",
-            react: WelcomeEmail({
-              userName: user.name,
-              appUrl: APP_URL,
-            }),
-          });
+          try {
+            await sendEmail({
+              to: user.email,
+              subject: "Welcome to Odinala",
+              react: WelcomeEmail({
+                userName: user.name,
+                appUrl: APP_URL,
+              }),
+            });
+          } catch (err) {
+            console.error("[Welcome email error]", err);
+          }
         },
       },
     },
