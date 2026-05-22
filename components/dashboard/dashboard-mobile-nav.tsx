@@ -13,6 +13,7 @@ import {
 const navOptions = [
   { label: "Overview", value: "/dashboard" },
   { label: "Users", value: "/dashboard/users" },
+  { label: "Leads", value: "/dashboard/leads" },
   { label: "Admins", value: "/dashboard/admins" },
   { label: "Listings", value: "/dashboard/listings" },
   { label: "Orders", value: "/dashboard/orders" },

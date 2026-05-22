@@ -16,7 +16,7 @@ export function GoogleButton({ mode }: GoogleButtonProps) {
     setLoading(true);
     await signIn.social({
       provider: "google",
-      callbackURL: "/",
+      callbackURL: mode === "sign-up" ? "/onboarding" : "/",
     });
   };
 

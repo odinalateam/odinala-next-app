@@ -94,6 +94,21 @@ model UserProfile {
   kycStatus        String    @default("unverified") // "unverified" | "verified"
   kycVerifiedAt    DateTime?
 
+  // Onboarding
+  onboardingCompleted    Boolean   @default(false)
+  onboardingSkipped      Boolean   @default(false)
+  country                String?
+  investmentBudget       String?   // "5M_plus" | "1M_5M" | "exploring"
+  propertyTypePreference String?   // "Property" | "Land" | "Both"
+  utmSource              String?
+  utmMedium              String?
+  utmCampaign            String?
+
+  // Lead Scoring
+  leadScore              Int?
+  leadTier               String?   // "hot" | "warm" | "cold"
+  leadScoredAt           DateTime?
+
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 

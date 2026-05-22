@@ -65,3 +65,5 @@ export type ListingWithCategory = Listing & {
 };
 
 export type { User, UserProfile, Listing, Order, Category };
+
+export type { LeadTier, LeadScoreBreakdown, LeadScoreResult, LeadScoreInput } from "./lead-score";

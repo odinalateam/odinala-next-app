@@ -14,6 +14,7 @@ import {
   Tag,
   Newspaper,
   LogOut,
+  Target,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +24,7 @@ import { usePolling } from "@/lib/hooks/use-polling";
 const sidebarItems = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Users", href: "/dashboard/users", icon: Users },
+  { label: "Leads", href: "/dashboard/leads", icon: Target },
   { label: "Admins", href: "/dashboard/admins", icon: ShieldCheck },
   { label: "Listings", href: "/dashboard/listings", icon: Building },
   { label: "Orders", href: "/dashboard/orders", icon: Package },
