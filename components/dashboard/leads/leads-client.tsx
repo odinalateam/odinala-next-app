@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, Mail, Flame, TrendingUp, Minus } from "lucide-react";
-import { BulkEmailDialog } from "./bulk-email-dialog";
+import { TemplatePickerSheet } from "./emails/template-picker-sheet";
 import type { UserWithProfile } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -360,7 +360,7 @@ export function LeadsClient({ data }: { data: UserWithProfile[] }) {
         </div>
       )}
 
-      <BulkEmailDialog
+      <TemplatePickerSheet
         open={emailDialogOpen}
         onOpenChange={setEmailDialogOpen}
         userIds={selectedUserIds}

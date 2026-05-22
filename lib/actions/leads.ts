@@ -25,19 +25,20 @@ export async function getLeads() {
 
 interface SendBulkEmailInput {
   userIds: string[];
-  subject: string;
-  body: string;
+  templateId: string;
 }
 
 export async function sendBulkEmail({
   userIds,
-  subject,
-  body,
+  templateId,
 }: SendBulkEmailInput): Promise<{ success: boolean; sent: number; error?: string }> {
   try {
     await requireAdmin();
 
     if (!userIds.length) return { success: false, sent: 0, error: "No users selected." };
+
+    const template = await prisma.emailTemplate.findUnique({ where: { id: templateId } });
+    if (!template) return { success: false, sent: 0, error: "Template not found." };
 
     const users = await prisma.user.findMany({
       where: { id: { in: userIds } },
@@ -48,11 +49,11 @@ export async function sendBulkEmail({
       users.map((user) =>
         sendEmail({
           to: user.email,
-          subject,
+          subject: template.subject,
           react: React.createElement(BulkEmail, {
             userName: user.name,
-            subject,
-            body,
+            subject: template.subject,
+            bodyHtml: template.body,
             appUrl: APP_URL,
           }),
         })
