@@ -7,6 +7,7 @@ import { ContactSection } from "@/components/partials/contact-section";
 import { CompareFloatingButton } from "@/components/compare/compare-floating-button";
 import { TokenizationPopup } from "@/components/home/tokenization-popup";
 import { BotpressChat } from "@/components/partials/botpress-chat";
+import { OnboardingBanner } from "@/components/onboarding/onboarding-banner";
 
 export default function MainLayout({
   children,
@@ -22,6 +23,7 @@ export default function MainLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
+      <OnboardingBanner />
       <div className="flex-1">{children}</div>
       {!isDashboard && <ContactSection />}
       <CompareFloatingButton />

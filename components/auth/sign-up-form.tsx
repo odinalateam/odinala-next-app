@@ -47,11 +47,11 @@ export function SignUpForm() {
         email,
         password,
         name: email.split("@")[0],
-        callbackURL: "/",
+        callbackURL: "/onboarding",
       },
       {
         onSuccess: () => {
-          router.push("/");
+          router.push("/onboarding");
           router.refresh();
         },
         onError: (ctx) => {

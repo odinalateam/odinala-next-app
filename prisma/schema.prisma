@@ -94,6 +94,21 @@ model UserProfile {
   kycStatus        String    @default("unverified") // "unverified" | "verified"
   kycVerifiedAt    DateTime?
 
+  // Onboarding
+  onboardingCompleted    Boolean   @default(false)
+  onboardingSkipped      Boolean   @default(false)
+  country                String?
+  investmentBudget       String?   // "5M_plus" | "1M_5M" | "exploring"
+  propertyTypePreference String?   // "Property" | "Land" | "Both"
+  utmSource              String?
+  utmMedium              String?
+  utmCampaign            String?
+
+  // Lead Scoring
+  leadScore              Int?
+  leadTier               String?   // "hot" | "warm" | "cold"
+  leadScoredAt           DateTime?
+
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
@@ -205,6 +220,15 @@ model PushSubscription {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  name      String
+  subject   String
+  body      String   // HTML from WYSIWYG editor
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Conversation {
