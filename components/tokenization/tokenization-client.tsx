@@ -384,7 +384,7 @@ export function TokenizationClient({
 
   return (
     <main>
-      {/* Hero */}
+      {/* Hero :)*/}
       <div className="border-b border-border bg-[url(https://images.unsplash.com/photo-1700157710823-2e9e58414802?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)] bg-no-repeat bg-cover text-white">
         <div className="max-w-6xl mx-auto px-4 py-16 sm:py-24">
           <motion.div
