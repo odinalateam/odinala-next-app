@@ -26,9 +26,11 @@ export default function IOSInstallPrompt() {
     <div className="mb-4 rounded-lg border border-border bg-muted/40 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <p className="text-sm font-medium">Get notifications on your iPhone</p>
+          <p className="text-sm font-medium">
+            Get notifications on your iPhone
+          </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Add Odinala to your Home Screen to receive order updates and new
+            Add Afrova to your Home Screen to receive order updates and new
             article alerts.
           </p>
           <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">

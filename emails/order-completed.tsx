@@ -24,7 +24,7 @@ export function OrderCompletedEmail({
         ID: {orderId}) has been successfully completed.
       </Text>
       <Text style={paragraph}>
-        Thank you for choosing Odinala for your property investment. If you need
+        Thank you for choosing Afrova for your property investment. If you need
         any further assistance, our team is here to help.
       </Text>
       <Section style={buttonContainer}>

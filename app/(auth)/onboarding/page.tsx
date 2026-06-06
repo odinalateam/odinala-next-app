@@ -8,7 +8,7 @@ import { OnboardingForm } from "@/components/onboarding/onboarding-form";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Complete Your Profile | Odinala",
+  title: "Complete Your Profile | Afrova",
 };
 
 export default async function OnboardingPage() {

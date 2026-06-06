@@ -11,16 +11,14 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/brand/logo.png"
-                height={24}
-                width={24}
-                alt=""
-                className="invert dark:invert-0"
+                height={30}
+                width={90}
+                alt="Afrova"
               />
-              <span className="font-bold text-lg">odinala</span>
             </Link>
             <p className="mt-3 text-sm text-background/60 leading-relaxed">
-              Your trusted platform for properties and land across Nigeria.
-              Find your perfect home or investment.
+              Your trusted platform for properties and land across Nigeria. Find
+              your perfect home or investment.
             </p>
           </div>
 
@@ -130,7 +128,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-background/10">
         <div className="max-w-6xl mx-auto w-full px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-background/50">
-          <p>&copy; {new Date().getFullYear()} Odinala. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Afrova. All rights reserved.</p>
           <div className="flex gap-4">
             <Link
               href="/privacy"

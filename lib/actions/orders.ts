@@ -45,7 +45,7 @@ export async function updateOrderStatus(id: string, status: string) {
   if (status === "Approved") {
     await sendEmail({
       to: order.user.email,
-      subject: "Your Order Has Been Approved - Odinala",
+      subject: "Your Order Has Been Approved - Afrova",
       react: OrderApprovedEmail({
         userName: order.user.name,
         listingName: order.listing.name,
@@ -63,7 +63,7 @@ export async function updateOrderStatus(id: string, status: string) {
   } else if (status === "Rejected") {
     await sendEmail({
       to: order.user.email,
-      subject: "Order Update - Odinala",
+      subject: "Order Update - Afrova",
       react: OrderRejectedEmail({
         userName: order.user.name,
         listingName: order.listing.name,
@@ -81,7 +81,7 @@ export async function updateOrderStatus(id: string, status: string) {
   } else if (status === "Completed") {
     await sendEmail({
       to: order.user.email,
-      subject: "Your Order is Complete - Odinala",
+      subject: "Your Order is Complete - Afrova",
       react: OrderCompletedEmail({
         userName: order.user.name,
         listingName: order.listing.name,
@@ -121,7 +121,7 @@ export async function releaseApplicationForm(orderId: string) {
 
   await sendEmail({
     to: order.user.email,
-    subject: "Application Form Available - Odinala",
+    subject: "Application Form Available - Afrova",
     react: ApplicationFormReleasedEmail({
       userName: order.user.name,
       listingName: order.listing.name,

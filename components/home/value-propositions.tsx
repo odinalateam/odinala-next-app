@@ -175,7 +175,7 @@ function MockupExpertGuidance() {
   return (
     <div className="p-8 space-y-6">
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-        Your Odinala Agent
+        Your Afrova Agent
       </p>
       <div className="flex items-center gap-5 p-4 rounded-2xl border bg-muted/30">
         <div className="h-16 w-16 rounded-full bg-amber-100 border-2 border-amber-300 flex items-center justify-center shrink-0">
@@ -273,7 +273,7 @@ function MockupSupport() {
     <div className="p-8 space-y-6">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          Odinala Support
+          Afrova Support
         </p>
         <span className="flex items-center gap-1.5 text-xs text-green-600 font-medium">
           <span className="h-2 w-2 rounded-full bg-green-500 inline-block" />
@@ -437,13 +437,13 @@ export function ValuePropositions() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const i = featureRefs.current.indexOf(
-              entry.target as HTMLDivElement
+              entry.target as HTMLDivElement,
             );
             if (i !== -1) setActiveIndex(i);
           }
         });
       },
-      { rootMargin: "-35% 0px -35% 0px", threshold: 0 }
+      { rootMargin: "-35% 0px -35% 0px", threshold: 0 },
     );
 
     featureRefs.current.forEach((el) => {
@@ -459,7 +459,7 @@ export function ValuePropositions() {
         {/* Header */}
         <div className="text-center mb-12 lg:mb-16">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            Why Choose Odinala
+            Why Choose Afrova
           </h2>
           <p className="text-muted-foreground mt-2 max-w-xl mx-auto text-sm">
             We provide everything you need for a smooth, secure property buying

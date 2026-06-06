@@ -36,7 +36,7 @@ const TOC = [
   },
   { id: "why-it-matters", label: "Why It Matters" },
   { id: "flagship", label: "Flagship Opportunity" },
-  { id: "why-odinala", label: "Why Odinala" },
+  { id: "why-odinala", label: "Why Afrova" },
   { id: "how-it-works", label: "How It Works" },
   { id: "benefits", label: "Key Benefits" },
   { id: "who-its-for", label: "Who It's For" },
@@ -127,7 +127,7 @@ function HowItWorksCarousel() {
     setActiveIndex((prev) => (prev + 1) % HOW_IT_WORKS.length);
   const goPrev = () =>
     setActiveIndex(
-      (prev) => (prev - 1 + HOW_IT_WORKS.length) % HOW_IT_WORKS.length
+      (prev) => (prev - 1 + HOW_IT_WORKS.length) % HOW_IT_WORKS.length,
     );
 
   useEffect(() => {
@@ -375,7 +375,7 @@ export function TokenizationClient({
           }
         }
       },
-      { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
+      { rootMargin: "-20% 0px -60% 0px", threshold: 0 },
     );
 
     elements.forEach((el) => observerRef.current?.observe(el));
@@ -384,7 +384,7 @@ export function TokenizationClient({
 
   return (
     <main>
-      {/* Hero */}
+      {/* Hero :)*/}
       <div className="border-b border-border bg-[url(https://images.unsplash.com/photo-1700157710823-2e9e58414802?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)] bg-no-repeat bg-cover text-white">
         <div className="max-w-6xl mx-auto px-4 py-16 sm:py-24">
           <motion.div
@@ -517,7 +517,7 @@ export function TokenizationClient({
               <p className="text-muted-foreground leading-relaxed mb-6">
                 No tech background needed. No millions required. Whether
                 you&apos;re 25 or 65, based in Lagos or London — if you can send
-                money online, you can invest through Odinala.
+                money online, you can invest through Afrova.
               </p>
               <ul className="space-y-3">
                 {[
@@ -561,7 +561,7 @@ export function TokenizationClient({
               <p className="text-muted-foreground leading-relaxed mb-4">
                 For decades, investing in Nigerian property from abroad meant
                 navigating currency barriers, unreliable agents, and unclear
-                ownership — with no guarantee your money was safe. Odinala
+                ownership — with no guarantee your money was safe. Afrova
                 changes that. You send USD, GBP, or EUR. We handle the
                 conversion, the verification, and the paperwork. You get a
                 secure, documented stake in the asset.
@@ -572,7 +572,7 @@ export function TokenizationClient({
                   trillions of dollars
                 </strong>{" "}
                 in value. Nigeria&apos;s property market is one of the
-                fastest-growing in Africa — and Odinala puts you at the front of
+                fastest-growing in Africa — and Afrova puts you at the front of
                 that wave, whether you&apos;re in Houston, Dublin, or Abuja.
               </p>
               <div className="grid grid-cols-2 gap-4">
@@ -628,7 +628,7 @@ export function TokenizationClient({
                   </h3>
                   <p className="text-white/60 text-sm">
                     A premium, high-demand property — title verified, on-site
-                    inspected, and fully structured by Odinala. Pay in your
+                    inspected, and fully structured by Afrova. Pay in your
                     currency. We deliver the keys.
                   </p>
                 </div>
@@ -648,10 +648,10 @@ export function TokenizationClient({
               </div>
             </Section>
 
-            {/* Why Odinala */}
+            {/* Why Afrova */}
             <Section id="why-odinala">
               <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-4">
-                Why Choose Odinala
+                Why Choose Afrova
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
                 We know the biggest fear with Nigerian real estate is losing
@@ -723,7 +723,7 @@ export function TokenizationClient({
               <p className="text-muted-foreground leading-relaxed mb-8">
                 Traditional real estate is slow, expensive, and hard to get into
                 — especially from abroad. Tokenization changes the rules, and
-                Odinala makes it simple enough for anyone.
+                Afrova makes it simple enough for anyone.
               </p>
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
@@ -827,7 +827,7 @@ export function TokenizationClient({
                         key={property.id}
                         property={property}
                         secondaryPrice={`${formatUsd(
-                          ngnToUsd(property.price)
+                          ngnToUsd(property.price),
                         )} USD`}
                       />
                     ))}

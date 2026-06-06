@@ -6,7 +6,7 @@ import { Users, Building, Package, Tag } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard | Odinala",
+  title: "Dashboard | Afrova",
 };
 
 export default async function DashboardPage() {

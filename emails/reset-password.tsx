@@ -12,7 +12,7 @@ export function ResetPasswordEmail({
   resetUrl,
 }: ResetPasswordEmailProps) {
   return (
-    <EmailLayout preview="Reset your Odinala password">
+    <EmailLayout preview="Reset your Afrova password">
       <Text style={heading}>Reset Your Password</Text>
       <Text style={paragraph}>Hi {userName},</Text>
       <Text style={paragraph}>

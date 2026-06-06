@@ -19,7 +19,7 @@ export const auth = betterAuth({
     sendResetPassword: async ({ user, url }) => {
       await sendEmail({
         to: user.email,
-        subject: "Reset Your Password - Odinala",
+        subject: "Reset Your Password - Afrova",
         react: ResetPasswordEmail({
           userName: user.name,
           resetUrl: url,
@@ -42,7 +42,7 @@ export const auth = betterAuth({
           try {
             await sendEmail({
               to: user.email,
-              subject: "Welcome to Odinala",
+              subject: "Welcome to Afrova",
               react: WelcomeEmail({
                 userName: user.name,
                 appUrl: APP_URL,

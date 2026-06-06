@@ -1,4 +1,12 @@
-import { Text, Section, Html, Head, Body, Container, Font } from "@react-email/components";
+import {
+  Text,
+  Section,
+  Html,
+  Head,
+  Body,
+  Container,
+  Font,
+} from "@react-email/components";
 import * as React from "react";
 import sanitizeHtml from "sanitize-html";
 
@@ -10,19 +18,41 @@ interface BulkEmailProps {
 }
 
 const ALLOWED_TAGS = [
-  "p", "br", "strong", "b", "em", "i", "u", "s", "strike",
-  "h1", "h2", "h3", "h4", "ul", "ol", "li", "blockquote",
-  "a", "span", "div",
+  "p",
+  "br",
+  "strong",
+  "b",
+  "em",
+  "i",
+  "u",
+  "s",
+  "strike",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "ul",
+  "ol",
+  "li",
+  "blockquote",
+  "a",
+  "span",
+  "div",
 ];
 
 const ALLOWED_ATTRIBUTES = {
-  "a": ["href", "target"],
-  "span": ["style"],
-  "p": ["style"],
-  "div": ["style"],
+  a: ["href", "target"],
+  span: ["style"],
+  p: ["style"],
+  div: ["style"],
 };
 
-export function BulkEmail({ userName, subject, bodyHtml, appUrl: _appUrl }: BulkEmailProps) {
+export function BulkEmail({
+  userName,
+  subject,
+  bodyHtml,
+  appUrl: _appUrl,
+}: BulkEmailProps) {
   const safeHtml = sanitizeHtml(bodyHtml, {
     allowedTags: ALLOWED_TAGS,
     allowedAttributes: ALLOWED_ATTRIBUTES,
@@ -59,7 +89,7 @@ export function BulkEmail({ userName, subject, bodyHtml, appUrl: _appUrl }: Bulk
 
           <Section style={footerSection}>
             <Text style={footerText}>
-              You are receiving this email because you are registered on Odinala.
+              You are receiving this email because you are registered on Afrova.
             </Text>
           </Section>
         </Container>

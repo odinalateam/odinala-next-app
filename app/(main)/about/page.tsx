@@ -18,9 +18,9 @@ import {
 } from "@/components/ui/accordion";
 
 export const metadata: Metadata = {
-  title: "About Us | Odinala",
+  title: "About Us | Afrova",
   description:
-    "Learn about Odinala — the platform digitizing real estate and empowering investors through blockchain technology.",
+    "Learn about Afrova — the platform digitizing real estate and empowering investors through blockchain technology.",
 };
 
 const team = [
@@ -33,9 +33,9 @@ const team = [
 
 const faqs = [
   {
-    question: "What is the mission of Odinala?",
+    question: "What is the mission of Afrova?",
     answer:
-      "Odinala exists to democratize real estate investment. We believe everyone should have access to property ownership and the wealth-building opportunities that come with it — regardless of income level or geographic location.",
+      "Afrova exists to democratize real estate investment. We believe everyone should have access to property ownership and the wealth-building opportunities that come with it — regardless of income level or geographic location.",
   },
   {
     question: "What is tokenization?",
@@ -55,7 +55,7 @@ const faqs = [
   {
     question: "How does the wallet work?",
     answer:
-      "Your Odinala wallet is a secure digital wallet that stores your property tokens and manages your transactions. It allows you to view your portfolio, track earnings, and initiate token transfers — all in one place.",
+      "Your Afrova wallet is a secure digital wallet that stores your property tokens and manages your transactions. It allows you to view your portfolio, track earnings, and initiate token transfers — all in one place.",
   },
   {
     question: "How is rental income distributed?",
@@ -106,7 +106,7 @@ export default function About() {
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/65 to-black/20" />
         <div className="relative max-w-6xl mx-auto w-full px-4 py-20 md:py-28">
           <p className="text-sm font-medium text-white/60 uppercase tracking-widest mb-3">
-            About Odinala
+            About Afrova
           </p>
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight max-w-2xl text-white">
             What we specialise in
@@ -232,7 +232,7 @@ export default function About() {
               Frequently Asked Questions
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Everything you need to know about investing with Odinala.
+              Everything you need to know about investing with Afrova.
             </p>
           </div>
 

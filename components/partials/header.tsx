@@ -154,15 +154,8 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto w-full flex items-center justify-between px-4 h-14">
         {/* Logo */}
         <Link href="/" className="shrink-0">
-          <div className="flex gap-2 items-center">
-            <Image
-              src="/brand/logo.png"
-              height={30}
-              width={30}
-              alt=""
-              className="dark:invert"
-            />
-            <p className="font-bold text-lg">odinala</p>
+          <div className="flex gap-2 items-center mt-2">
+            <Image src="/brand/logo.png" height={36} width={110} alt="Afrova" />
           </div>
         </Link>
 
@@ -198,7 +191,7 @@ export default function Navbar() {
               "transition-colors",
               pathname.startsWith("/properties")
                 ? "text-foreground font-medium"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             Properties
@@ -209,7 +202,7 @@ export default function Navbar() {
               "transition-colors",
               pathname.startsWith("/lands")
                 ? "text-foreground font-medium"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             Lands
@@ -220,7 +213,7 @@ export default function Navbar() {
               "transition-colors",
               pathname.startsWith("/tokenization")
                 ? "text-foreground font-medium"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             <SpecialText speed={18} loop loopInterval={20000}>
@@ -333,7 +326,7 @@ export default function Navbar() {
                 "block py-2.5 text-sm transition-colors",
                 pathname === "/"
                   ? "text-foreground font-medium"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground",
               )}
             >
               All Listings
@@ -344,7 +337,7 @@ export default function Navbar() {
                 "block py-2.5 text-sm transition-colors",
                 pathname.startsWith("/properties")
                   ? "text-foreground font-medium"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground",
               )}
             >
               Properties
@@ -355,7 +348,7 @@ export default function Navbar() {
                 "block py-2.5 text-sm transition-colors",
                 pathname.startsWith("/lands")
                   ? "text-foreground font-medium"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground",
               )}
             >
               Lands
@@ -366,7 +359,7 @@ export default function Navbar() {
                 "block py-2.5 text-sm transition-colors",
                 pathname.startsWith("/tokenization")
                   ? "text-foreground font-medium"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground",
               )}
             >
               Tokenization
@@ -383,7 +376,7 @@ export default function Navbar() {
                     "flex items-center gap-2 py-2.5 text-sm transition-colors",
                     pathname.startsWith("/my-account")
                       ? "text-foreground font-medium"
-                      : "text-muted-foreground"
+                      : "text-muted-foreground",
                   )}
                 >
                   <User className="w-4 h-4" />
@@ -396,7 +389,7 @@ export default function Navbar() {
                       "flex items-center gap-2 py-2.5 text-sm transition-colors",
                       pathname.startsWith("/dashboard")
                         ? "text-foreground font-medium"
-                        : "text-muted-foreground"
+                        : "text-muted-foreground",
                     )}
                   >
                     <LayoutDashboard className="w-4 h-4" />

@@ -22,9 +22,7 @@ export function SignUpForm() {
   const [loading, setLoading] = useState(false);
 
   const isPasswordValid =
-    password.length >= 8 &&
-    /[a-zA-Z]/.test(password) &&
-    /[0-9]/.test(password);
+    password.length >= 8 && /[a-zA-Z]/.test(password) && /[0-9]/.test(password);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,18 +56,16 @@ export function SignUpForm() {
           setError(ctx.error.message);
           setLoading(false);
         },
-      }
+      },
     );
   };
 
   return (
     <>
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">
-          Create an account
-        </h1>
+        <h1 className="text-2xl font-bold tracking-tight">Create an account</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Get started with Odinala today
+          Get started with Afrova today
         </p>
       </div>
 

@@ -5,8 +5,8 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "News & Insights | Odinala",
-  description: "Latest news, insights, and updates from the Odinala team",
+  title: "News & Insights | Afrova",
+  description: "Latest news, insights, and updates from the Afrova team",
 };
 
 export default async function PublicNewsPage() {
@@ -17,7 +17,7 @@ export default async function PublicNewsPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight">News & Insights</h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          Stay updated with the latest from Odinala
+          Stay updated with the latest from Afrova
         </p>
       </div>
 

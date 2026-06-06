@@ -12,7 +12,7 @@ function getResend() {
   return resend;
 }
 
-const FROM_EMAIL = "Odinala <noreply@odinala.io>";
+const FROM_EMAIL = "Afrova <noreply@odinala.io>";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -24,14 +24,23 @@ interface SendEmailOptions {
   react: React.ReactElement;
 }
 
-export async function sendEmail({ to, subject, react }: SendEmailOptions): Promise<void> {
+export async function sendEmail({
+  to,
+  subject,
+  react,
+}: SendEmailOptions): Promise<void> {
   const client = getResend();
   if (!client) {
     console.warn("[Email] RESEND_API_KEY not configured, skipping email");
     return;
   }
 
-  const result = await client.emails.send({ from: FROM_EMAIL, to, subject, react });
+  const result = await client.emails.send({
+    from: FROM_EMAIL,
+    to,
+    subject,
+    react,
+  });
   if (result.error) {
     console.error("[Email Error]", result.error);
     throw new Error(`Failed to send email: ${result.error.message}`);

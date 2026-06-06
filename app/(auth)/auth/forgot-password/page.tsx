@@ -4,7 +4,7 @@ import { AuthFormWrapper } from "@/components/auth/auth-form-wrapper";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Forgot Password | Odinala",
+  title: "Forgot Password | Afrova",
 };
 
 export default function ForgotPasswordPage() {

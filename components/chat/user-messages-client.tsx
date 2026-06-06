@@ -115,7 +115,7 @@ export function UserMessagesClient({
       setMessages(updated);
 
       const hasUnread = updated.some(
-        (m) => !m.isReadByUser && m.senderRole === "admin"
+        (m) => !m.isReadByUser && m.senderRole === "admin",
       );
       if (hasUnread) {
         await markAsRead(selectedId);
@@ -141,8 +141,8 @@ export function UserMessagesClient({
 
       setConversations((prev) =>
         prev.map((c) =>
-          c.id === conversationId ? { ...c, _count: { messages: 0 } } : c
-        )
+          c.id === conversationId ? { ...c, _count: { messages: 0 } } : c,
+        ),
       );
     } catch {
       setLoadingMessages(false);
@@ -184,7 +184,11 @@ export function UserMessagesClient({
     return (
       <div className="rounded-lg border border-border">
         <div className="border-b border-border px-4 py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon-sm" onClick={() => setView("list")}>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => setView("list")}
+          >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <h2 className="text-sm font-medium">New Conversation</h2>
@@ -192,11 +196,9 @@ export function UserMessagesClient({
         <div className="p-6">
           <div className="text-center mb-6">
             <MessageSquare className="h-10 w-10 mx-auto mb-3 text-primary opacity-60" />
-            <h3 className="text-base font-medium mb-1">
-              How can we help you?
-            </h3>
+            <h3 className="text-base font-medium mb-1">How can we help you?</h3>
             <p className="text-sm text-muted-foreground">
-              Select a topic to start a conversation with the Odinala team
+              Select a topic to start a conversation with the Afrova team
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md mx-auto">
@@ -233,11 +235,15 @@ export function UserMessagesClient({
               #{selected.ticketNumber} - {selected.topic}
             </p>
             <p className="text-xs text-muted-foreground">
-              Messages with Odinala Team
+              Messages with Afrova Team
             </p>
           </div>
         </div>
-        <MessageList messages={messages} currentUserId={session.user.id} loading={loadingMessages} />
+        <MessageList
+          messages={messages}
+          currentUserId={session.user.id}
+          loading={loadingMessages}
+        />
         <MessageInput onSend={handleSend} />
       </div>
     );
@@ -258,7 +264,7 @@ export function UserMessagesClient({
           <MessageSquare className="h-10 w-10 mb-3 opacity-40" />
           <p className="text-sm">No conversations yet</p>
           <p className="text-xs mt-1 opacity-60 mb-4">
-            Start a conversation with the Odinala team
+            Start a conversation with the Afrova team
           </p>
           <Button size="sm" onClick={() => setView("topic-select")}>
             <Plus className="h-3.5 w-3.5" />
@@ -274,7 +280,7 @@ export function UserMessagesClient({
                 key={conv.id}
                 onClick={() => handleSelectConversation(conv.id)}
                 className={cn(
-                  "w-full flex items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50 border-b border-border last:border-b-0 cursor-pointer"
+                  "w-full flex items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50 border-b border-border last:border-b-0 cursor-pointer",
                 )}
               >
                 <div className="h-9 w-9 shrink-0 rounded-full bg-primary/10 text-primary flex items-center justify-center">
@@ -290,7 +296,7 @@ export function UserMessagesClient({
                         "text-sm truncate",
                         conv._count.messages > 0
                           ? "font-semibold"
-                          : "font-medium"
+                          : "font-medium",
                       )}
                     >
                       #{conv.ticketNumber} - {conv.topic}
@@ -307,7 +313,7 @@ export function UserMessagesClient({
                         "text-xs truncate",
                         conv._count.messages > 0
                           ? "text-foreground font-medium"
-                          : "text-muted-foreground"
+                          : "text-muted-foreground",
                       )}
                     >
                       {lastMsg

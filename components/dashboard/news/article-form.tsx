@@ -45,7 +45,7 @@ export function ArticleForm({ article }: ArticleFormProps) {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(article?.status ?? "draft");
   const [coverImage, setCoverImage] = useState<string | null>(
-    article?.coverImage ?? null
+    article?.coverImage ?? null,
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -126,14 +126,17 @@ export function ArticleForm({ article }: ArticleFormProps) {
               name="author"
               required
               defaultValue={article?.author}
-              placeholder="e.g. Odinala Team"
+              placeholder="e.g. Afrova Team"
             />
           </div>
           <div className="space-y-1.5">
             <Label>
               Status <span className="text-destructive">*</span>
             </Label>
-            <Select value={status} onValueChange={(v) => setStatus(v ?? "draft")}>
+            <Select
+              value={status}
+              onValueChange={(v) => setStatus(v ?? "draft")}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>

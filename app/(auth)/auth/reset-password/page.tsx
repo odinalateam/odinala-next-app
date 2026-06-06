@@ -5,7 +5,7 @@ import { AuthFormWrapper } from "@/components/auth/auth-form-wrapper";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Reset Password | Odinala",
+  title: "Reset Password | Afrova",
 };
 
 export default function ResetPasswordPage() {
