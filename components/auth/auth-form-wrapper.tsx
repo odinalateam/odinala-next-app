@@ -12,12 +12,10 @@ export function AuthFormWrapper({ children }: AuthFormWrapperProps) {
         <Link href="/" className="flex items-center gap-2 mb-8">
           <Image
             src="/brand/logo.png"
-            height={28}
-            width={28}
-            alt="Odinala"
-            className="dark:invert"
+            height={34}
+            width={100}
+            alt="Afrova"
           />
-          <span className="font-bold text-lg">odinala</span>
         </Link>
         {children}
       </div>

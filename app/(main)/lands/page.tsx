@@ -3,7 +3,7 @@ import { PropertyGrid } from "@/components/property-grid";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Lands | Odinala",
+  title: "Lands | Afrova",
   description: "Browse available land across Nigeria",
 };
 
@@ -37,8 +37,8 @@ export default async function LandsPage({
       ) : (
         <>
           <p className="text-sm text-muted-foreground mb-4">
-            {listings.length}{" "}
-            {listings.length === 1 ? "listing" : "listings"} found
+            {listings.length} {listings.length === 1 ? "listing" : "listings"}{" "}
+            found
           </p>
           <PropertyGrid properties={listings} />
         </>

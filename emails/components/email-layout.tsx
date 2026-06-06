@@ -24,9 +24,7 @@ export function EmailLayout({ preview, children }: EmailLayoutProps) {
         <Container style={container}>
           <Section style={header}>
             <Text style={logo}>ODINALA</Text>
-            <Text style={tagline}>
-              Property & Land Investment - Nigeria
-            </Text>
+            <Text style={tagline}>Property & Land Investment - Nigeria</Text>
           </Section>
 
           <Hr style={hr} />
@@ -37,7 +35,7 @@ export function EmailLayout({ preview, children }: EmailLayoutProps) {
 
           <Section style={footer}>
             <Text style={footerText}>
-              Odinala Investment Ltd. - Discover properties and land across
+              Afrova Investment Ltd. - Discover properties and land across
               Nigeria.
             </Text>
             <Text style={footerText}>

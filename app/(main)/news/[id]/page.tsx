@@ -13,7 +13,7 @@ export async function generateMetadata({
   const article = await getArticleById(id);
   if (!article) return { title: "Article Not Found" };
   return {
-    title: `${article.title} | Odinala News`,
+    title: `${article.title} | Afrova News`,
     description: article.content.slice(0, 160),
   };
 }
@@ -70,13 +70,11 @@ export default async function ArticlePage({
       </div>
 
       <div className="prose prose-sm max-w-none dark:prose-invert">
-        {article.content.split("\n").map((paragraph, i) =>
-          paragraph.trim() ? (
-            <p key={i}>{paragraph}</p>
-          ) : (
-            <br key={i} />
-          )
-        )}
+        {article.content
+          .split("\n")
+          .map((paragraph, i) =>
+            paragraph.trim() ? <p key={i}>{paragraph}</p> : <br key={i} />,
+          )}
       </div>
     </main>
   );

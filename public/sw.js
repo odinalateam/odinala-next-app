@@ -5,11 +5,11 @@ self.addEventListener("push", (event) => {
   try {
     payload = event.data.json();
   } catch {
-    payload = { title: "Odinala", body: event.data.text() };
+    payload = { title: "Afrova", body: event.data.text() };
   }
 
   event.waitUntil(
-    self.registration.showNotification(payload.title || "Odinala", {
+    self.registration.showNotification(payload.title || "Afrova", {
       body: payload.body || "",
       icon: "/brand/icon-192.png",
       badge: "/brand/icon-192.png",

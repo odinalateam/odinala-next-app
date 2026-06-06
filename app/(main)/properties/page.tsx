@@ -8,7 +8,7 @@ import { PropertyFilters } from "@/components/properties/property-filters";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Properties | Odinala",
+  title: "Properties | Afrova",
   description: "Browse available properties across Nigeria",
 };
 
@@ -32,9 +32,7 @@ export default async function PropertiesPage({
         ? params.developmentStatus
         : undefined,
     purchaseType:
-      typeof params.purchaseType === "string"
-        ? params.purchaseType
-        : undefined,
+      typeof params.purchaseType === "string" ? params.purchaseType : undefined,
     features: features.length > 0 ? features : undefined,
     minPrice:
       typeof params.minPrice === "string"
@@ -63,7 +61,10 @@ export default async function PropertiesPage({
 
       <div className="flex flex-col lg:flex-row gap-8">
         <aside className="lg:w-64 shrink-0">
-          <PropertyFilters availableFeatures={availableFeatures} priceRange={priceRange} />
+          <PropertyFilters
+            availableFeatures={availableFeatures}
+            priceRange={priceRange}
+          />
         </aside>
 
         <div className="flex-1 min-w-0">

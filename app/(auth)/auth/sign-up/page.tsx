@@ -4,7 +4,7 @@ import { AuthFormWrapper } from "@/components/auth/auth-form-wrapper";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Create Account | Odinala",
+  title: "Create Account | Afrova",
 };
 
 export default function SignUpPage() {

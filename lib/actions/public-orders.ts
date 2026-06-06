@@ -35,7 +35,7 @@ export async function createOrder(data: {
   });
   if (!profile || profile.kycStatus !== "verified") {
     throw new Error(
-      "Please complete your KYC verification before placing an order"
+      "Please complete your KYC verification before placing an order",
     );
   }
 
@@ -86,7 +86,7 @@ export async function createOrder(data: {
 
   await sendEmail({
     to: session.user.email,
-    subject: "Order Confirmation - Odinala",
+    subject: "Order Confirmation - Afrova",
     react: OrderConfirmationEmail({
       userName: session.user.name,
       listingName: listing.name,
@@ -100,7 +100,7 @@ export async function createOrder(data: {
   });
 
   await sendAdminEmail({
-    subject: `New Order: ${listing.name} - Odinala`,
+    subject: `New Order: ${listing.name} - Afrova`,
     react: AdminNewOrderEmail({
       userName: session.user.name,
       userEmail: session.user.email,
@@ -127,7 +127,7 @@ export async function getUserOrders() {
 
 export async function uploadFilledApplicationForm(
   orderId: string,
-  url: string
+  url: string,
 ) {
   const session = await requireAuth();
 
@@ -153,7 +153,7 @@ export async function uploadFilledApplicationForm(
   revalidatePath("/dashboard/orders");
 
   await sendAdminEmail({
-    subject: `Application Form Submitted: ${updatedOrder.listing.name} - Odinala`,
+    subject: `Application Form Submitted: ${updatedOrder.listing.name} - Afrova`,
     react: AdminApplicationSubmittedEmail({
       userName: session.user.name,
       userEmail: session.user.email,
@@ -186,7 +186,7 @@ export async function uploadProofOfPayment(orderId: string, url: string) {
   revalidatePath("/dashboard/orders");
 
   await sendAdminEmail({
-    subject: `Proof of Payment Uploaded: ${updatedOrder.listing.name} - Odinala`,
+    subject: `Proof of Payment Uploaded: ${updatedOrder.listing.name} - Afrova`,
     react: AdminProofOfPaymentEmail({
       userName: session.user.name,
       userEmail: session.user.email,

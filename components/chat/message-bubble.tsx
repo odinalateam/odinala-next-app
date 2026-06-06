@@ -37,17 +37,20 @@ export function MessageBubble({
 }) {
   return (
     <div
-      className={cn("flex flex-col max-w-[75%]", isMine ? "ml-auto items-end" : "items-start")}
+      className={cn(
+        "flex flex-col max-w-[75%]",
+        isMine ? "ml-auto items-end" : "items-start",
+      )}
     >
       <span className="text-[11px] text-muted-foreground mb-1 px-1">
-        {isMine ? "You" : senderRole === "admin" ? "Odinala Team" : senderName}
+        {isMine ? "You" : senderRole === "admin" ? "Afrova Team" : senderName}
       </span>
       <div
         className={cn(
           "rounded-2xl px-3.5 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words",
           isMine
             ? "bg-primary text-primary-foreground rounded-br-md"
-            : "bg-muted text-foreground rounded-bl-md"
+            : "bg-muted text-foreground rounded-bl-md",
         )}
       >
         {content}

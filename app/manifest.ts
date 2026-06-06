@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Odinala - Property & Land Listings",
-    short_name: "Odinala",
+    name: "Afrova - Property & Land Listings",
+    short_name: "Afrova",
     description: "Discover properties and land across Nigeria",
     start_url: "/",
     display: "standalone",

@@ -14,7 +14,7 @@ export async function generateMetadata({
   const listing = await getPublicListingById(id);
   if (!listing) return { title: "Property Not Found" };
   return {
-    title: `${listing.name} | Odinala`,
+    title: `${listing.name} | Afrova`,
     description: listing.description,
   };
 }

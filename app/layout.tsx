@@ -19,13 +19,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Odinala - Property & Land Listings",
+  title: "Afrova - Property & Land Listings",
   description: "Discover properties and land across Nigeria",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Odinala",
+    title: "Afrova",
   },
   icons: {
     apple: "/brand/apple-touch-icon.png",
@@ -42,13 +42,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
       <body className="antialiased">
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <CompareProvider>
-            {children}
-          </CompareProvider>
+          <CompareProvider>{children}</CompareProvider>
           <Toaster richColors />
         </ThemeProvider>
       </body>

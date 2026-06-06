@@ -8,9 +8,9 @@ import { CalendlyEmbed } from "@/components/about/calendly-embed";
 import { ContactForm } from "@/components/about/contact-form";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Odinala",
+  title: "Contact Us | Afrova",
   description:
-    "Get in touch with the Odinala team. Book a consultation or send us a message.",
+    "Get in touch with the Afrova team. Book a consultation or send us a message.",
 };
 
 export default function Contact() {

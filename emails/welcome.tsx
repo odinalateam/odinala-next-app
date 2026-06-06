@@ -9,11 +9,11 @@ interface WelcomeEmailProps {
 
 export function WelcomeEmail({ userName, appUrl }: WelcomeEmailProps) {
   return (
-    <EmailLayout preview="Welcome to Odinala - Your property investment journey starts here">
-      <Text style={heading}>Welcome to Odinala!</Text>
+    <EmailLayout preview="Welcome to Afrova - Your property investment journey starts here">
+      <Text style={heading}>Welcome to Afrova!</Text>
       <Text style={paragraph}>Hi {userName},</Text>
       <Text style={paragraph}>
-        Thank you for creating your account with Odinala. We are your trusted
+        Thank you for creating your account with Afrova. We are your trusted
         partner for property and land investments across Nigeria.
       </Text>
       <Text style={paragraph}>

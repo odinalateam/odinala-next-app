@@ -8,13 +8,13 @@ const testimonials = [
     name: "David Ifeanyi",
     role: "Investor",
     quote:
-      "I couldn't be happier with the service I received from Odinala Network. They helped me find my dream home with a smooth and seamless process.",
+      "I couldn't be happier with the service I received from Afrova Network. They helped me find my dream home with a smooth and seamless process.",
   },
   {
     name: "Mike Chibueze",
     role: "Buyer",
     quote:
-      "Odinala made finding my dream home a breeze. The process was seamless from start to finish and the team was incredibly supportive throughout.",
+      "Afrova made finding my dream home a breeze. The process was seamless from start to finish and the team was incredibly supportive throughout.",
   },
 ];
 
@@ -24,7 +24,7 @@ export function Testimonials() {
   const next = () => setCurrent((prev) => (prev + 1) % testimonials.length);
   const prev = () =>
     setCurrent(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
     );
 
   const testimonial = testimonials[current];

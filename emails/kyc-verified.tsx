@@ -14,7 +14,7 @@ export function KycVerifiedEmail({ userName, appUrl }: KycVerifiedEmailProps) {
       <Text style={paragraph}>Hi {userName},</Text>
       <Text style={paragraph}>
         Your identity verification has been successfully completed. You are now
-        fully verified on Odinala and can browse our property and land listings
+        fully verified on Afrova and can browse our property and land listings
         to place orders.
       </Text>
       <Section style={buttonContainer}>

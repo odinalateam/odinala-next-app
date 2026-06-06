@@ -44,7 +44,7 @@ async function checkAndUpdateKycStatus(userId: string) {
       try {
         await sendEmail({
           to: user.email,
-          subject: "Your KYC Verification is Complete - Odinala",
+          subject: "Your KYC Verification is Complete - Afrova",
           react: KycVerifiedEmail({
             userName: user.name,
             appUrl: APP_URL,
@@ -171,13 +171,13 @@ export async function verifyNINAction(nin: string) {
   const lastname = nameParts.slice(1).join(" ") || "";
 
   if (!firstname || !lastname) {
-    throw new Error("Please save your first and last name before verifying NIN");
+    throw new Error(
+      "Please save your first and last name before verifying NIN",
+    );
   }
 
   if (!profile?.dateOfBirth) {
-    throw new Error(
-      "Please save your date of birth before verifying NIN"
-    );
+    throw new Error("Please save your date of birth before verifying NIN");
   }
 
   // Format DOB for VerifyMe API (DD-MM-YYYY)
