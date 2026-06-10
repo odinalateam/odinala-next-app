@@ -12,9 +12,11 @@ import { SocialDivider } from "@/components/auth/social-divider";
 import { GoogleButton } from "@/components/auth/google-button";
 import { signUp } from "@/lib/auth-client";
 import { Loader2 } from "lucide-react";
+import { usePostHog } from "posthog-js/react";
 
 export function SignUpForm() {
   const router = useRouter();
+  const ph = usePostHog();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -49,10 +51,15 @@ export function SignUpForm() {
       },
       {
         onSuccess: () => {
+          ph.capture("signup_completed", { method: "email" });
           router.push("/onboarding");
           router.refresh();
         },
         onError: (ctx) => {
+          ph.capture("signup_error", {
+            method: "email",
+            error_message: ctx.error.message,
+          });
           setError(ctx.error.message);
           setLoading(false);
         },

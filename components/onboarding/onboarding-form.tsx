@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { saveOnboarding, skipOnboarding } from "@/lib/actions/onboarding";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { usePostHog } from "posthog-js/react";
 
 const BUDGET_OPTIONS = [
   {
@@ -49,6 +50,7 @@ const POPULAR_COUNTRIES = [
 
 export function OnboardingForm() {
   const router = useRouter();
+  const ph = usePostHog();
   const [country, setCountry] = useState("");
   const [investmentBudget, setInvestmentBudget] = useState("");
   const [propertyTypePreference, setPropertyTypePreference] = useState("");
@@ -94,6 +96,12 @@ export function OnboardingForm() {
     setLoading(false);
 
     if (result.success) {
+      ph.capture("onboarding_completed", {
+        country: country.trim(),
+        budget: investmentBudget,
+        property_preference: propertyTypePreference,
+        skipped: false,
+      });
       router.push("/");
       router.refresh();
     } else {
@@ -106,6 +114,7 @@ export function OnboardingForm() {
     const result = await skipOnboarding();
     setSkipping(false);
     if (result.success) {
+      ph.capture("onboarding_skipped");
       router.push("/");
       router.refresh();
     } else {

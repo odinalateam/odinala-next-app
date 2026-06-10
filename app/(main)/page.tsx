@@ -4,6 +4,7 @@ import { HeroSection } from "@/components/home/hero-section";
 import { ValuePropositions } from "@/components/home/value-propositions";
 import { HowItWorks } from "@/components/home/how-it-works";
 import { Testimonials } from "@/components/home/testimonials";
+import { HomeScrollTracker } from "@/components/home/home-scroll-tracker";
 
 export default async function Home({
   searchParams,
@@ -17,6 +18,7 @@ export default async function Home({
 
   return (
     <main>
+      <HomeScrollTracker />
       {!search && <HeroSection />}
 
       {!search && <ValuePropositions />}

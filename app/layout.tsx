@@ -7,6 +7,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CompareProvider } from "@/lib/compare-context";
 import { Toaster } from "sonner";
+import { Suspense } from "react";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,8 +52,12 @@ export default function RootLayout({
       <body className="antialiased">
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <CompareProvider>{children}</CompareProvider>
-          <Toaster richColors />
+          <Suspense fallback={null}>
+            <PostHogProvider>
+              <CompareProvider>{children}</CompareProvider>
+              <Toaster richColors />
+            </PostHogProvider>
+          </Suspense>
         </ThemeProvider>
       </body>
     </html>
