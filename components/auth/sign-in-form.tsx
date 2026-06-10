@@ -11,9 +11,11 @@ import { SocialDivider } from "@/components/auth/social-divider";
 import { GoogleButton } from "@/components/auth/google-button";
 import { signIn } from "@/lib/auth-client";
 import { Loader2 } from "lucide-react";
+import { usePostHog } from "posthog-js/react";
 
 export function SignInForm() {
   const router = useRouter();
+  const ph = usePostHog();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
   const [email, setEmail] = useState("");
@@ -34,10 +36,15 @@ export function SignInForm() {
       },
       {
         onSuccess: () => {
+          ph.capture("signin_completed", { method: "email" });
           router.push(redirectTo);
           router.refresh();
         },
         onError: (ctx) => {
+          ph.capture("signin_error", {
+            method: "email",
+            error_message: ctx.error.message,
+          });
           setError(ctx.error.message);
           setLoading(false);
         },

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePostHog } from "posthog-js/react";
+import { useScrollDepth } from "@/lib/hooks/use-scroll-depth";
 import {
   motion,
   AnimatePresence,
@@ -105,6 +107,7 @@ const HOW_IT_WORKS = [
 
 function HowItWorksCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const ph = usePostHog();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const mouseX = useMotionValue(0);
@@ -123,15 +126,30 @@ function HowItWorksCarousel() {
     }
   };
 
-  const goNext = () =>
+  // Used by auto-advance timer only — no event capture
+  const advanceNext = () =>
     setActiveIndex((prev) => (prev + 1) % HOW_IT_WORKS.length);
-  const goPrev = () =>
-    setActiveIndex(
-      (prev) => (prev - 1 + HOW_IT_WORKS.length) % HOW_IT_WORKS.length,
-    );
+
+  // Used by buttons — captures user intent
+  const goNext = () => {
+    const next = (activeIndex + 1) % HOW_IT_WORKS.length;
+    setActiveIndex(next);
+    ph.capture("tokenization_carousel_navigated", {
+      direction: "next",
+      step: next,
+    });
+  };
+  const goPrev = () => {
+    const prev = (activeIndex - 1 + HOW_IT_WORKS.length) % HOW_IT_WORKS.length;
+    setActiveIndex(prev);
+    ph.capture("tokenization_carousel_navigated", {
+      direction: "prev",
+      step: prev,
+    });
+  };
 
   useEffect(() => {
-    const timer = setInterval(goNext, 5000);
+    const timer = setInterval(advanceNext, 5000);
     return () => clearInterval(timer);
   }, []);
 
@@ -287,7 +305,13 @@ function HowItWorksCarousel() {
                   {HOW_IT_WORKS.map((_, i) => (
                     <button
                       key={i}
-                      onClick={() => setActiveIndex(i)}
+                      onClick={() => {
+                        setActiveIndex(i);
+                        ph.capture("tokenization_carousel_navigated", {
+                          direction: "dot",
+                          step: i,
+                        });
+                      }}
                       className={`w-1.5 h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                         i === activeIndex
                           ? "bg-foreground w-4"
@@ -358,8 +382,11 @@ export function TokenizationClient({
 }: {
   listings: ListingWithCategory[];
 }) {
+  const ph = usePostHog();
+  useScrollDepth("tokenization");
   const [activeSection, setActiveSection] = useState("what-is-tokenization");
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const viewedSectionsRef = useRef(new Set<string>());
 
   useEffect(() => {
     const ids = TOC.map((t) => t.id);
@@ -372,6 +399,12 @@ export function TokenizationClient({
         for (const entry of entries) {
           if (entry.isIntersecting) {
             setActiveSection(entry.target.id);
+            if (!viewedSectionsRef.current.has(entry.target.id)) {
+              viewedSectionsRef.current.add(entry.target.id);
+              ph.capture("tokenization_section_viewed", {
+                section_name: entry.target.id,
+              });
+            }
           }
         }
       },
@@ -380,7 +413,7 @@ export function TokenizationClient({
 
     elements.forEach((el) => observerRef.current?.observe(el));
     return () => observerRef.current?.disconnect();
-  }, []);
+  }, [ph]);
 
   return (
     <main>
@@ -409,6 +442,12 @@ export function TokenizationClient({
             <div className="flex flex-col sm:flex-row gap-3 mt-8">
               <a
                 href="#get-access"
+                onClick={() =>
+                  ph.capture("tokenization_cta_clicked", {
+                    cta_location: "hero",
+                    cta_text: "Register Early Access",
+                  })
+                }
                 className="inline-flex items-center justify-center gap-2 bg-white text-black text-sm font-semibold px-6 py-3 rounded-lg hover:bg-white/90 transition-colors"
               >
                 Register Early Access
@@ -416,6 +455,12 @@ export function TokenizationClient({
               </a>
               <a
                 href="#what-is-tokenization"
+                onClick={() =>
+                  ph.capture("tokenization_cta_clicked", {
+                    cta_location: "hero",
+                    cta_text: "Learn More",
+                  })
+                }
                 className="inline-flex items-center justify-center gap-2 border border-white/20 text-white text-sm font-medium px-6 py-3 rounded-lg hover:border-white/40 transition-colors"
               >
                 Learn More
@@ -479,6 +524,12 @@ export function TokenizationClient({
                 </p>
                 <a
                   href="#get-access"
+                  onClick={() =>
+                    ph.capture("tokenization_cta_clicked", {
+                      cta_location: "sidebar",
+                      cta_text: "Register now",
+                    })
+                  }
                   className="inline-flex items-center gap-1 text-[11px] font-bold tracking-widest uppercase text-violet-800 dark:text-violet-200 hover:text-violet-600 dark:hover:text-violet-100 transition-colors"
                 >
                   Register now
@@ -823,13 +874,22 @@ export function TokenizationClient({
                 <>
                   <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {listings.slice(0, 3).map((property) => (
-                      <PropertyCard
+                      <div
                         key={property.id}
-                        property={property}
-                        secondaryPrice={`${formatUsd(
-                          ngnToUsd(property.price),
-                        )} USD`}
-                      />
+                        onClick={() =>
+                          ph.capture("tokenization_property_clicked", {
+                            property_id: property.id,
+                            property_name: property.name,
+                          })
+                        }
+                      >
+                        <PropertyCard
+                          property={property}
+                          secondaryPrice={`${formatUsd(
+                            ngnToUsd(property.price),
+                          )} USD`}
+                        />
+                      </div>
                     ))}
                   </div>
                   <p className="text-[11px] text-muted-foreground/60 mt-4">
@@ -889,13 +949,29 @@ export function TokenizationClient({
                     ))}
                   </ul>
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <Link href="/auth/sign-up">
+                    <Link
+                      href="/auth/sign-up"
+                      onClick={() =>
+                        ph.capture("tokenization_cta_clicked", {
+                          cta_location: "bottom",
+                          cta_text: "Register Your Interest",
+                        })
+                      }
+                    >
                       <button className="inline-flex items-center gap-2 bg-white text-black text-sm font-semibold px-6 py-3 rounded-lg hover:bg-white/90 transition-colors cursor-pointer">
                         Register Your Interest
                         <ArrowRight className="w-4 h-4" />
                       </button>
                     </Link>
-                    <Link href="/auth/sign-up">
+                    <Link
+                      href="/auth/sign-up"
+                      onClick={() =>
+                        ph.capture("tokenization_cta_clicked", {
+                          cta_location: "bottom",
+                          cta_text: "Join the Diaspora Investment List",
+                        })
+                      }
+                    >
                       <button className="inline-flex items-center gap-2 border border-white/20 text-white text-sm font-medium px-6 py-3 rounded-lg hover:border-white/40 transition-colors cursor-pointer">
                         Join the Diaspora Investment List
                       </button>
