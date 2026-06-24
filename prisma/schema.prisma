@@ -231,6 +231,17 @@ model EmailTemplate {
   updatedAt DateTime @updatedAt
 }
 
+model AgentActionLog {
+  id        String   @id @default(cuid())
+  agentId   String
+  action    String
+  payload   Json?
+  status    String
+  createdAt DateTime @default(now())
+
+  @@index([agentId, createdAt])
+}
+
 model Conversation {
   id           String   @id @default(cuid())
   userId       String
