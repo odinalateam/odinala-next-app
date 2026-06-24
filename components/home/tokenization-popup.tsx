@@ -9,6 +9,7 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { Dialog, DialogOverlay, DialogPortal } from "@/components/ui/dialog";
 
 const STORAGE_KEY = "odinala_tokenization_popup_dismissed";
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 export function TokenizationPopup() {
   const pathname = usePathname();
@@ -22,7 +23,11 @@ export function TokenizationPopup() {
     )
       return;
 
-    if (localStorage.getItem(STORAGE_KEY) === "true") return;
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      if (stored === "never") return;
+      if (Date.now() - parseInt(stored, 10) < ONE_DAY_MS) return;
+    }
 
     const timer = setTimeout(() => setOpen(true), 2000);
     return () => clearTimeout(timer);
@@ -30,7 +35,9 @@ export function TokenizationPopup() {
 
   const handleClose = () => {
     if (dontShowAgain) {
-      localStorage.setItem(STORAGE_KEY, "true");
+      localStorage.setItem(STORAGE_KEY, "never");
+    } else {
+      localStorage.setItem(STORAGE_KEY, Date.now().toString());
     }
     setOpen(false);
   };
