@@ -274,7 +274,11 @@ export function ListingForm({
               <Label>Category</Label>
               <Select value={categoryId} onValueChange={(v) => setCategoryId(v ?? "")}>
                 <SelectTrigger className="w-full">
-                  <SelectValue />
+                  <SelectValue placeholder="None">
+                    {categoryId
+                      ? (categories.find((c) => c.id === categoryId)?.name ?? categoryId)
+                      : undefined}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">None</SelectItem>
