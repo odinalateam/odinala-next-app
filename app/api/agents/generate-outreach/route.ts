@@ -32,13 +32,14 @@ export async function POST(request: NextRequest) {
 
   const msg = await anthropic.messages.create({
     model: "claude-haiku-4-5",
-    max_tokens: 1500,
+    max_tokens: 3000,
     system: OUTREACH_SYSTEM_PROMPT,
     messages: [{ role: "user", content: buildOutreachMessage(prospect) }],
   });
 
   const rawText = (msg.content[0] as { type: string; text: string }).text;
-  const result: OutreachResult = JSON.parse(rawText);
+  const cleaned = rawText.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+  const result: OutreachResult = JSON.parse(cleaned);
 
   await prisma.agentActionLog.create({
     data: {
