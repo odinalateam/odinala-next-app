@@ -1,4 +1,4 @@
-import { getEmailTemplates } from "@/lib/actions/email-templates";
+import { getEmailTemplates, getAgentEmailTemplates } from "@/lib/actions/email-templates";
 import { TemplatesList } from "@/components/dashboard/leads/emails/templates-list";
 import { GenerateOutreachSheet } from "@/components/dashboard/leads/emails/generate-outreach-sheet";
 import { prisma } from "@/lib/prisma";
@@ -11,8 +11,9 @@ export const metadata: Metadata = {
 };
 
 export default async function EmailTemplatesPage() {
-  const [templates, latestBrief] = await Promise.all([
+  const [templates, agentTemplates, latestBrief] = await Promise.all([
     getEmailTemplates(),
+    getAgentEmailTemplates(),
     prisma.agentActionLog.findFirst({
       where: { agentId: "social-listening", status: "completed" },
       orderBy: { createdAt: "desc" },
@@ -58,6 +59,7 @@ export default async function EmailTemplatesPage() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Morning Brief static card */}
           <div className="rounded-lg border border-amber-200 bg-amber-50/40 p-4 flex flex-col gap-3">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
@@ -68,7 +70,14 @@ export default async function EmailTemplatesPage() {
                 </div>
                 <p className="font-medium text-sm truncate">Morning Brief (Agent)</p>
                 <p className="text-xs text-muted-foreground truncate mt-0.5">
-                  Afrova Morning Brief — {latestBrief ? new Date(latestBrief.createdAt).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }) : "Not yet sent"}
+                  Afrova Morning Brief —{" "}
+                  {latestBrief
+                    ? new Date(latestBrief.createdAt).toLocaleDateString("en-GB", {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                      })
+                    : "Not yet sent"}
                 </p>
               </div>
               <Mail className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
@@ -87,11 +96,46 @@ export default async function EmailTemplatesPage() {
 
             <div className="flex items-center justify-between gap-2 pt-1 border-t border-amber-200/60 mt-auto">
               <p className="text-[11px] text-muted-foreground">
-                {latestBrief ? `Last sent ${new Date(latestBrief.createdAt).toLocaleDateString()}` : "Awaiting first run"}
+                {latestBrief
+                  ? `Last sent ${new Date(latestBrief.createdAt).toLocaleDateString()}`
+                  : "Awaiting first run"}
               </p>
               <p className="text-[11px] text-amber-700 font-medium">Daily · Automated</p>
             </div>
           </div>
+
+          {/* Agent-generated email templates from content angles */}
+          {agentTemplates.map((t) => (
+            <div
+              key={t.id}
+              className="rounded-lg border border-amber-200 bg-amber-50/40 p-4 flex flex-col gap-3"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                      [AGENT: CONTENT ANGLE]
+                    </span>
+                  </div>
+                  <p className="font-medium text-sm truncate">{t.name}</p>
+                  <p className="text-xs text-muted-foreground truncate mt-0.5">{t.subject}</p>
+                </div>
+                <Mail className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
+              </div>
+
+              <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+                {t.body.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 120)}
+                {t.body.length > 120 ? "…" : ""}
+              </p>
+
+              <div className="flex items-center justify-between gap-2 pt-1 border-t border-amber-200/60 mt-auto">
+                <p className="text-[11px] text-muted-foreground">
+                  Generated {new Date(t.createdAt).toLocaleDateString()}
+                </p>
+                <p className="text-[11px] text-amber-700 font-medium">AI-authored</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

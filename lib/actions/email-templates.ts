@@ -13,7 +13,19 @@ async function requireAdmin() {
 
 export async function getEmailTemplates() {
   await requireAdmin();
-  return prisma.emailTemplate.findMany({ orderBy: { updatedAt: "desc" } });
+  return prisma.emailTemplate.findMany({
+    where: { isAgentGenerated: false },
+    orderBy: { updatedAt: "desc" },
+  });
+}
+
+export async function getAgentEmailTemplates() {
+  await requireAdmin();
+  return prisma.emailTemplate.findMany({
+    where: { isAgentGenerated: true },
+    orderBy: { createdAt: "desc" },
+    take: 10,
+  });
 }
 
 export async function getEmailTemplate(id: string) {

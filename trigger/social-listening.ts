@@ -73,14 +73,32 @@ export const socialListeningTask = schedules.task({
       messages: [{ role: "user", content: buildSocialListeningMessage(combined) }],
     });
 
-    const rawText = (msg.content[0] as { type: string; text: string }).text;
+    const rawText = (msg.content[0] as { type: string; text: string }).text
+      .replace(/^```(?:json)?\n?/i, "")
+      .replace(/\n?```$/i, "")
+      .trim();
     const briefing = JSON.parse(rawText) as {
       stories: { title: string; why: string }[];
       contentAngles: [string, string];
       dataPoint: string;
+      emailTemplates: { name: string; subject: string; body: string }[];
     };
 
-    // 4. Save to DB
+    // 4. Save email templates generated from content angles
+    if (briefing.emailTemplates?.length) {
+      for (const t of briefing.emailTemplates) {
+        await prisma.emailTemplate.create({
+          data: {
+            name: t.name,
+            subject: t.subject,
+            body: t.body,
+            isAgentGenerated: true,
+          },
+        });
+      }
+    }
+
+    // 5. Save to agent log
     await prisma.agentActionLog.create({
       data: {
         agentId: "social-listening",
