@@ -18,7 +18,7 @@ Return raw JSON only — no markdown, no code fences, no explanation, just the J
 stories: exactly 3 items. Each has a title and a "why it matters for Afrova" explanation (1 sentence).
 contentAngles: exactly 2 items. Short social/content ideas the marketing team could post today.
 dataPoint: exactly 1 stat or figure from the search results (e.g. exchange rate, price index, percentage).
-emailTemplates: exactly 2 items — one per content angle. Each is a short outreach email (under 120 words) written for Afrova targeting Nigerian diaspora investors in the UK. name is a short template label. subject is the email subject line. body is plain HTML (p tags only, no inline styles).
+emailTemplates: exactly 2 items — one per content angle. Each is a short outreach email (under 120 words) written for Afrova targeting Nigerian diaspora investors in the UK. name is a short template label. subject is the email subject line. body is plain text only — no HTML tags, no newlines, just a single continuous string.
 `;
 
 export function buildSocialListeningMessage(results: string): string {

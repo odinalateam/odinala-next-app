@@ -169,7 +169,7 @@ export function GenerateOutreachSheet() {
         }
       />
 
-      <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-lg overflow-y-auto p-6">
         <SheetHeader className="mb-6">
           <div className="flex items-center gap-2">
             <Bot className="h-4 w-4 text-amber-600" />

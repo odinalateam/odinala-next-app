@@ -68,7 +68,7 @@ export const socialListeningTask = schedules.task({
     // 3. Call Claude Haiku 4.5
     const msg = await anthropic.messages.create({
       model: "claude-haiku-4-5",
-      max_tokens: 700,
+      max_tokens: 1500,
       system: SOCIAL_LISTENING_SYSTEM_PROMPT,
       messages: [{ role: "user", content: buildSocialListeningMessage(combined) }],
     });
