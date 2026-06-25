@@ -1,6 +1,6 @@
 import { defineConfig } from "@trigger.dev/sdk/v3";
 
 export default defineConfig({
-  project: "odinala-agentic",
+  project: "proj_crpbgxhgwiusxiximhlh",
   maxDuration: 300,
 });
