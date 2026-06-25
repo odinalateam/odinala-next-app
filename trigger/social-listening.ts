@@ -77,11 +77,19 @@ export const socialListeningTask = schedules.task({
       .replace(/^```(?:json)?\n?/i, "")
       .replace(/\n?```$/i, "")
       .trim();
-    const briefing = JSON.parse(rawText) as {
+    const rawBriefing = JSON.parse(rawText) as {
       stories: { title: string; why: string }[];
-      contentAngles: [string, string];
+      contentAngles: (string | { angle: string })[];
       dataPoint: string;
       emailTemplates: { name: string; subject: string; body: string }[];
+    };
+
+    // Normalize contentAngles — Claude occasionally returns objects instead of plain strings
+    const briefing = {
+      ...rawBriefing,
+      contentAngles: rawBriefing.contentAngles.map((a) =>
+        typeof a === "string" ? a : a.angle
+      ) as [string, string],
     };
 
     // 4. Save email templates generated from content angles

@@ -31,7 +31,7 @@ PROPERTY FIT RULES:
 - Business-minded / diversification → Commercial property, mixed-use assets, growth corridor land
 
 EMAIL RULES:
-- Under 120 words per email
+- Under 250 words per email
 - No bullet points — flowing prose only
 - Warm, culturally aware, professional, never pushy
 - Subject line must be creative and tied to the prospect's actual situation

@@ -39,7 +39,9 @@ function EmailCard({
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-xs font-medium text-muted-foreground mb-1.5">Subject</p>
+        <p className="text-xs font-medium text-muted-foreground mb-1.5">
+          Subject
+        </p>
         <div className="flex items-center gap-2">
           <p className="text-sm flex-1 bg-muted/50 rounded px-3 py-2 leading-relaxed">
             {email.subject}
@@ -56,7 +58,9 @@ function EmailCard({
       </div>
 
       <div>
-        <p className="text-xs font-medium text-muted-foreground mb-1.5">Email body</p>
+        <p className="text-xs font-medium text-muted-foreground mb-1.5">
+          Email body
+        </p>
         <div className="relative">
           <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed bg-muted/50 rounded px-3 py-2 pr-10">
             {email.body}
@@ -73,12 +77,7 @@ function EmailCard({
         </div>
       </div>
 
-      <Button
-        size="sm"
-        variant="outline"
-        className="w-full"
-        onClick={onSave}
-      >
+      <Button size="sm" variant="outline" className="w-full" onClick={onSave}>
         Save as template
       </Button>
     </div>
@@ -122,7 +121,9 @@ export function GenerateOutreachSheet() {
       const data: OutreachResult = await res.json();
       setResult(data);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to generate emails");
+      toast.error(
+        err instanceof Error ? err.message : "Failed to generate emails",
+      );
     } finally {
       setLoading(false);
     }
@@ -130,7 +131,7 @@ export function GenerateOutreachSheet() {
 
   const handleSave = async (
     type: "legacy" | "investment" | "easeAndTrust",
-    label: string
+    label: string,
   ) => {
     if (!result) return;
     const email = result[type];
@@ -148,7 +149,13 @@ export function GenerateOutreachSheet() {
   };
 
   const resetForm = () => {
-    setForm({ name: "", location: "", profession: "", milestone: "", nigeriaConnection: "" });
+    setForm({
+      name: "",
+      location: "",
+      profession: "",
+      milestone: "",
+      nigeriaConnection: "",
+    });
     setResult(null);
   };
 
@@ -162,7 +169,7 @@ export function GenerateOutreachSheet() {
     >
       <SheetTrigger
         render={
-          <Button size="sm" variant="outline" className="gap-1.5">
+          <Button size="sm" variant="outline" disabled className="gap-1.5">
             <Sparkles className="h-3.5 w-3.5" />
             AI Outreach
           </Button>
@@ -176,8 +183,8 @@ export function GenerateOutreachSheet() {
             <SheetTitle>Generate Outreach Emails</SheetTitle>
           </div>
           <SheetDescription>
-            Enter prospect details and Claude will generate 3 personalised diaspora outreach
-            emails for Afrova.io.
+            Enter prospect details and Claude will generate 3 personalised
+            diaspora outreach emails for Afrova.io.
           </SheetDescription>
         </SheetHeader>
 
@@ -190,7 +197,9 @@ export function GenerateOutreachSheet() {
                 id="name"
                 placeholder="e.g. Chioma Adeyemi"
                 value={form.name}
-                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, name: e.target.value }))
+                }
               />
             </div>
 
@@ -200,7 +209,9 @@ export function GenerateOutreachSheet() {
                 id="location"
                 placeholder="e.g. Manchester, UK"
                 value={form.location}
-                onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, location: e.target.value }))
+                }
               />
             </div>
 
@@ -210,7 +221,9 @@ export function GenerateOutreachSheet() {
                 id="profession"
                 placeholder="e.g. NHS Doctor, Software Engineer"
                 value={form.profession}
-                onChange={(e) => setForm((f) => ({ ...f, profession: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, profession: e.target.value }))
+                }
               />
             </div>
 
@@ -220,7 +233,9 @@ export function GenerateOutreachSheet() {
                 id="milestone"
                 placeholder="e.g. Recently promoted to Senior Consultant"
                 value={form.milestone}
-                onChange={(e) => setForm((f) => ({ ...f, milestone: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, milestone: e.target.value }))
+                }
               />
             </div>
 
