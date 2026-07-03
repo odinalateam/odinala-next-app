@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -90,16 +90,66 @@ export function PropertyDetailClient({ listing, kycVerified = false }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+  const checkoutStartedRef = useRef(false);
+  const checkoutEventIdRef = useRef<string | null>(null);
 
   const hasImages = listing.images.length > 0;
   const gradientIndex =
     Math.abs(listing.id.charCodeAt(0)) % gradients.length;
+
+  // Track listing view on mount (fire-and-forget)
+  useEffect(() => {
+    if (!session) return;
+    fetch("/api/activity", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ listingId: listing.id }),
+    }).catch(() => {});
+  }, [session, listing.id]);
+
+  // Detect checkout abandonment on unmount
+  useEffect(() => {
+    return () => {
+      if (
+        checkoutStartedRef.current &&
+        !success &&
+        checkoutEventIdRef.current
+      ) {
+        fetch("/api/checkout-event", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: checkoutEventIdRef.current,
+            step: "abandoned",
+          }),
+          keepalive: true,
+        }).catch(() => {});
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSendRequest = async () => {
     if (!session) {
       router.push("/auth/sign-in");
       return;
     }
+
+    // Record checkout start
+    if (!checkoutStartedRef.current) {
+      checkoutStartedRef.current = true;
+      fetch("/api/checkout-event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ listingId: listing.id }),
+      })
+        .then((r) => r.json())
+        .then((data: { id?: string }) => {
+          if (data.id) checkoutEventIdRef.current = data.id;
+        })
+        .catch(() => {});
+    }
+
     setSubmitting(true);
     setError(null);
     try {
@@ -110,6 +160,17 @@ export function PropertyDetailClient({ listing, kycVerified = false }: Props) {
           paymentOption === "installment" ? listing.maxInstallment : null,
       });
       setSuccess(true);
+      // Mark checkout complete
+      if (checkoutEventIdRef.current) {
+        fetch("/api/checkout-event", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: checkoutEventIdRef.current,
+            step: "completed",
+          }),
+        }).catch(() => {});
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {

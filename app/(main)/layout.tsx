@@ -8,6 +8,7 @@ import { CompareFloatingButton } from "@/components/compare/compare-floating-but
 import { TokenizationPopup } from "@/components/home/tokenization-popup";
 import { BotpressChat } from "@/components/partials/botpress-chat";
 import { OnboardingBanner } from "@/components/onboarding/onboarding-banner";
+import { ActivityTracker } from "@/components/activity-tracker";
 
 export default function MainLayout({
   children,
@@ -24,6 +25,7 @@ export default function MainLayout({
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <OnboardingBanner />
+      <ActivityTracker />
       <div className="flex-1">{children}</div>
       {!isDashboard && <ContactSection />}
       <CompareFloatingButton />

@@ -54,6 +54,20 @@ export const auth = betterAuth({
         },
       },
     },
+    session: {
+      create: {
+        after: async (session) => {
+          try {
+            await prisma.user.update({
+              where: { id: session.userId },
+              data: { lastActiveAt: new Date() },
+            });
+          } catch (err) {
+            console.error("[lastActiveAt session update error]", err);
+          }
+        },
+      },
+    },
   },
 
   plugins: [admin(), nextCookies()],

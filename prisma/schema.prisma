@@ -21,6 +21,12 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  // Re-engagement Agent fields
+  lastActiveAt          DateTime?
+  reengagementStatus    String?   // null | 'active' | 'completed' | 'exited'
+  reengagementTriggerId String?
+  marketingOptIn        Boolean   @default(true)
+
   sessions          Session[]
   accounts          Account[]
   profile           UserProfile?
@@ -29,6 +35,8 @@ model User {
   sentMessages      Message[]          @relation("MessageSender")
   notifications     Notification[]
   pushSubscriptions PushSubscription[]
+  checkoutEvents    CheckoutEvent[]
+  listingViews      ListingView[]
 }
 
 model Session {
@@ -153,8 +161,10 @@ model Listing {
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
-  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  orders   Order[]
+  category       Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  orders         Order[]
+  checkoutEvents CheckoutEvent[]
+  listingViews   ListingView[]
 }
 
 model Article {
@@ -236,12 +246,42 @@ model EmailTemplate {
 model AgentActionLog {
   id        String   @id @default(cuid())
   agentId   String
+  userId    String?
   action    String
   payload   Json?
   status    String
   createdAt DateTime @default(now())
 
   @@index([agentId, createdAt])
+  @@index([userId])
+}
+
+model CheckoutEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  step      String   // 'started' | 'abandoned' | 'completed'
+  listingId String?
+  createdAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing? @relation(fields: [listingId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+}
+
+model ListingView {
+  id        String   @id @default(cuid())
+  userId    String
+  listingId String
+  viewCount Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, listingId])
+  @@index([userId, updatedAt])
 }
 
 model Conversation {
